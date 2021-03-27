@@ -292,6 +292,7 @@
     <Content Include="scripts\popper.js.map" />
     <Content Include="scripts\popper-utils.min.js.map" />
     <Content Include="scripts\popper-utils.js.map" />
+    <Content Include="scripts\jquery.blockUI.js" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppConstants.cs" />

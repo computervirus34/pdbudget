@@ -145,4 +145,11 @@ namespace PDBudget
         public string invExpCode { get; set; }
 
     }
+
+    public class CourseEventResourceExpenses
+    {
+        public CourseEvent courseEvent { get; set; }
+        public List<ResourcePerson> ResourcePersons { get; set; }
+        public List<OtherExpenses> OtherExpenses { get; set; }
+    }
 }

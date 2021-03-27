@@ -181,6 +181,9 @@ namespace PDBudget
                 dt = pl.GetExpenseType();
                 fl.PopulateDDL(dt, ddlSundaySuppliesExpCode, "ID", "Name", true, "--Select--", "-1");
 
+                dt = null;
+                dt = pl.GetCourseEventCode();
+                fl.PopulateDDL(dt, ddlCourseCode, "ID", "Name", true, "--Select--", "-1");
             }
             catch (Exception ex)
             {
@@ -866,6 +869,241 @@ namespace PDBudget
         protected void txtActIncomeNonMemberMin_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        [WebMethod]
+        public static CourseEventResourceExpenses GetCourseData(string CourseCode)
+        {
+            string zip;
+
+            CourseEventResourceExpenses courseEventResourceExpenses = new CourseEventResourceExpenses();
+            CourseEvent courseEvent = new CourseEvent();
+            List<ResourcePerson> lstResourcePerson = new List<ResourcePerson>();
+            List<OtherExpenses> lstOtherExpenses = new List<OtherExpenses>();
+            try
+            {
+                string constr = ConfigurationManager.ConnectionStrings["MysqlConnection"].ConnectionString;
+                using (MySqlConnection con = new MySqlConnection(constr))
+                {
+                    using (MySqlCommand cmd = new MySqlCommand("select * from courseevent where courseCode = @courseCode"))
+                    {
+                        DataSet ds = new DataSet();
+                        cmd.CommandType = CommandType.Text;
+                        cmd.Parameters.AddWithValue("@courseCode", CourseCode);
+                        cmd.Connection = con;
+                        con.Open();
+
+                        MySqlDataAdapter dap = new MySqlDataAdapter(cmd);
+                        dap.Fill(ds);
+                        courseEvent = PopulateCourseEvent(ds);
+                        con.Close();
+
+                    }
+                    using (MySqlCommand cmd = new MySqlCommand("select * from presenter_tutor_convener where courseCode = @courseCode"))
+                    {
+                        DataTable dt = new DataTable();
+                        cmd.CommandType = CommandType.Text;
+                        cmd.Parameters.AddWithValue("@courseCode", CourseCode);
+                        cmd.Connection = con;
+                        con.Open();
+
+                        MySqlDataAdapter dap = new MySqlDataAdapter(cmd);
+                        dap.Fill(dt);
+                        if (dt != null && dt.Rows.Count > 0)
+                        {
+                            lstResourcePerson = PopulateResourcePersonList(dt);
+                        }
+                        con.Close();
+
+                    }
+                    using (MySqlCommand cmd = new MySqlCommand("select * from other_expenses where courseCode = @courseCode"))
+                    {
+                        DataTable dt = new DataTable();
+                        cmd.CommandType = CommandType.Text;
+                        cmd.Parameters.AddWithValue("@courseCode", CourseCode);
+                        cmd.Connection = con;
+                        con.Open();
+
+                        MySqlDataAdapter dap = new MySqlDataAdapter(cmd);
+                        dap.Fill(dt);
+                        if (dt != null && dt.Rows.Count > 0)
+                        {
+                            lstOtherExpenses = PopulateOtherExpensesList(dt);
+                        }
+
+                        con.Close();
+
+                    }
+
+
+
+
+                    courseEventResourceExpenses.courseEvent = courseEvent;
+                    courseEventResourceExpenses.ResourcePersons = lstResourcePerson;
+                    courseEventResourceExpenses.OtherExpenses = lstOtherExpenses;
+                }
+                return courseEventResourceExpenses;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        private static List<OtherExpenses> PopulateOtherExpensesList(DataTable dt)
+        {
+            List<OtherExpenses> expensesList = new List<OtherExpenses>();
+            foreach (DataRow dr in dt.Rows)
+            {
+                OtherExpenses otherExpenses = new OtherExpenses();
+                otherExpenses.id = int.Parse(dr["id"].ToString());
+                otherExpenses.courseCode = dr["courseCode"].ToString();
+                otherExpenses.otherExpenseName = dr["otherExpenseName"].ToString();
+                otherExpenses.expenseCode = dr["expenseCode"].ToString();
+                otherExpenses.exPer = dr["exPer"].ToString() == "" ? 0 : Convert.ToDecimal(dr["exPer"].ToString());
+                otherExpenses.amount = dr["amount"].ToString() == "" ? 0 : Decimal.Parse(dr["amount"].ToString());
+                otherExpenses.invNumber = dr["invNumber"].ToString();
+                otherExpenses.invAmount = dr["invAmount"].ToString() == "" ? 0 : Decimal.Parse(dr["invAmount"].ToString());
+                otherExpenses.datePaid = dr["datePaid"].ToString();
+                otherExpenses.invExpCode = dr["invExpCode"].ToString();
+                expensesList.Add(otherExpenses);
+            }
+            return expensesList;
+        }
+
+        private static List<ResourcePerson> PopulateResourcePersonList(DataTable dt)
+        {
+            List<ResourcePerson> lstResourcePerson = new List<ResourcePerson>();
+            foreach (DataRow dr in dt.Rows)
+            {
+                ResourcePerson resourcePerson = new ResourcePerson();
+                resourcePerson.id = int.Parse(dr["id"].ToString());
+                resourcePerson.courseCode = dr["courseCode"].ToString();
+                resourcePerson.rtype = dr["rtype"].ToString();
+                resourcePerson.resource_person_id = int.Parse(dr["resource_person_id"].ToString());
+                resourcePerson.session_ = dr["session_"].ToString();
+                resourcePerson.hours_ = dr["hours_"].ToString();
+                resourcePerson.rate = Decimal.Parse(dr["rate"].ToString());
+                resourcePerson.accomadation = Decimal.Parse(dr["accomadation"].ToString());
+                resourcePerson.travelEx = Convert.ToDecimal(dr["travelEx"].ToString());
+                resourcePerson.meal = Decimal.Parse(dr["meal"].ToString());
+                resourcePerson.taxi = Decimal.Parse(dr["taxi"].ToString());
+                resourcePerson.expenseCode = dr["expenseCode"].ToString();
+                resourcePerson.invNumber = dr["invNumber"].ToString();
+                resourcePerson.datePaid = dr["datePaid"].ToString();
+                resourcePerson.amount = Decimal.Parse(dr["amount"].ToString());
+
+                lstResourcePerson.Add(resourcePerson);
+            }
+            return lstResourcePerson;
+        }
+
+        private static CourseEvent PopulateCourseEvent(DataSet ds)
+        {
+            CourseEvent courseEvent = new CourseEvent();
+            courseEvent.id = Convert.ToInt32(ds.Tables[0].Rows[0]["id"].ToString());
+            courseEvent.courseCode = ds.Tables[0].Rows[0]["courseCode"].ToString();
+            courseEvent.courseName = ds.Tables[0].Rows[0]["courseName"].ToString();
+            courseEvent.aptifyId = ds.Tables[0].Rows[0]["aptifyId"].ToString();
+            courseEvent.courseStatus = ds.Tables[0].Rows[0]["courseStatus"].ToString();
+            courseEvent.group_ = ds.Tables[0].Rows[0]["group_"].ToString();
+            courseEvent.CPDHours = Convert.ToDecimal(ds.Tables[0].Rows[0]["CPDHours"].ToString());
+            courseEvent.CourseLevel = ds.Tables[0].Rows[0]["CourseLevel"].ToString();
+            courseEvent.co_host = ds.Tables[0].Rows[0]["co_host"].ToString();
+            courseEvent.CourseDurationDays = Convert.ToDecimal(ds.Tables[0].Rows[0]["CourseDurationDays"].ToString());
+            courseEvent.coordinator = ds.Tables[0].Rows[0]["coordinator"].ToString();
+            courseEvent.Additional_group = ds.Tables[0].Rows[0]["Additional_group"].ToString();
+            courseEvent.country = ds.Tables[0].Rows[0]["country"].ToString();
+            courseEvent.state_ = ds.Tables[0].Rows[0]["state_"].ToString();
+            courseEvent.reg_metro_int = ds.Tables[0].Rows[0]["reg_metro_int"].ToString();
+            courseEvent.venue = ds.Tables[0].Rows[0]["venue"].ToString();
+            courseEvent.suburb_city = ds.Tables[0].Rows[0]["suburb_city"].ToString();
+            courseEvent.zipcode = ds.Tables[0].Rows[0]["zipcode"].ToString();
+            courseEvent.courseDate = ds.Tables[0].Rows[0]["courseDate"].ToString();
+            courseEvent.StartDate = ds.Tables[0].Rows[0]["StartDate"].ToString();
+            courseEvent.EndDate = ds.Tables[0].Rows[0]["StartDate"].ToString();
+            courseEvent.cretedby = ds.Tables[0].Rows[0]["cretedby"].ToString();
+            courseEvent.createdon = ds.Tables[0].Rows[0]["createdon"].ToString();
+            courseEvent.modifiedby = ds.Tables[0].Rows[0]["modifiedby"].ToString();
+            courseEvent.modifiedon = ds.Tables[0].Rows[0]["modifiedon"].ToString();
+            courseEvent.forecastapprovedby = ds.Tables[0].Rows[0]["forecastapprovedby"].ToString();
+            courseEvent.forecastapprovedate = ds.Tables[0].Rows[0]["forecastapprovedate"].ToString();
+            courseEvent.signedoffby = ds.Tables[0].Rows[0]["signedoffby"].ToString();
+            courseEvent.signedoffon = ds.Tables[0].Rows[0]["signedoffon"].ToString();
+            courseEvent.NoPresenters = Convert.ToDecimal(ds.Tables[0].Rows[0]["NoPresenters"].ToString());
+            courseEvent.totalConsultantIncPresenter = Convert.ToDecimal(ds.Tables[0].Rows[0]["totalConsultantIncPresenter"].ToString());
+            courseEvent.numberofFreePlace = Convert.ToDecimal(ds.Tables[0].Rows[0]["numberofFreePlace"].ToString());
+            courseEvent.minimumParticipant = Convert.ToDecimal(ds.Tables[0].Rows[0]["minimumParticipant"].ToString());
+            courseEvent.averageParticipant = Convert.ToDecimal(ds.Tables[0].Rows[0]["id"].ToString());
+            courseEvent.minimumAchieve40PerMargin = Convert.ToDecimal(ds.Tables[0].Rows[0]["minimumAchieve40PerMargin"].ToString());
+            courseEvent.maximumAvailable = Convert.ToDecimal(ds.Tables[0].Rows[0]["maximumAvailable"].ToString());
+            courseEvent.contributionOverheadPercent = Convert.ToDecimal(ds.Tables[0].Rows[0]["contributionOverheadPercent"].ToString());
+            courseEvent.participantFeeEBDistantMin = Convert.ToDecimal(ds.Tables[0].Rows[0]["participantFeeEBDistantMin"].ToString());
+            courseEvent.diffBWEBSP = Convert.ToDecimal(ds.Tables[0].Rows[0]["diffBWEBSP"].ToString());
+            courseEvent.participantPerEBDistant = Convert.ToDecimal(ds.Tables[0].Rows[0]["participantPerEBDistant"].ToString());
+            courseEvent.participantPerEBApa = Convert.ToDecimal(ds.Tables[0].Rows[0]["participantPerEBApa"].ToString());
+            courseEvent.participantPerEBNonMember = Convert.ToDecimal(ds.Tables[0].Rows[0]["participantPerEBNonMember"].ToString());
+            courseEvent.participantPerNonDistant = Convert.ToDecimal(ds.Tables[0].Rows[0]["participantPerNonDistant"].ToString());
+            courseEvent.participantPerNonApa = Convert.ToDecimal(ds.Tables[0].Rows[0]["participantPerNonApa"].ToString());
+            courseEvent.participantPerNonMember = Convert.ToDecimal(ds.Tables[0].Rows[0]["participantPerNonMember"].ToString());
+            courseEvent.actparticipantEBDistant = Convert.ToDecimal(ds.Tables[0].Rows[0]["actparticipantEBDistant"].ToString());
+            courseEvent.actparticipantEBApa = Convert.ToDecimal(ds.Tables[0].Rows[0]["actparticipantEBApa"].ToString());
+            courseEvent.actparticipantEBNonMember = Convert.ToDecimal(ds.Tables[0].Rows[0]["actparticipantEBNonMember"].ToString());
+            courseEvent.actparticipantNonDistant = Convert.ToDecimal(ds.Tables[0].Rows[0]["actparticipantNonDistant"].ToString());
+            courseEvent.actparticipantNonApa = Convert.ToDecimal(ds.Tables[0].Rows[0]["actparticipantNonApa"].ToString());
+            courseEvent.actparticipantNonMember = Convert.ToDecimal(ds.Tables[0].Rows[0]["actparticipantNonMember"].ToString());
+            courseEvent.sponsorshipMin = Convert.ToDecimal(ds.Tables[0].Rows[0]["sponsorshipMin"].ToString());
+            courseEvent.morningTeaDays = Convert.ToInt32(ds.Tables[0].Rows[0]["morningTeaDays"].ToString());
+            courseEvent.morningTeaRate = Convert.ToDecimal(ds.Tables[0].Rows[0]["morningTeaRate"].ToString());
+            courseEvent.teaInvNo = ds.Tables[0].Rows[0]["teaInvNo"].ToString();
+            courseEvent.teaInvAMount = Convert.ToDecimal(ds.Tables[0].Rows[0]["teaInvAMount"].ToString());
+            courseEvent.teaInvDate = ds.Tables[0].Rows[0]["teaInvDate"].ToString();
+            courseEvent.teaInvCode = ds.Tables[0].Rows[0]["teaInvCode"].ToString();
+            courseEvent.lunchDays = Convert.ToInt32(ds.Tables[0].Rows[0]["lunchDays"].ToString());
+            courseEvent.lunchRate = Convert.ToDecimal(ds.Tables[0].Rows[0]["lunchRate"].ToString());
+            courseEvent.lunchInvNo = ds.Tables[0].Rows[0]["lunchInvNo"].ToString();
+            courseEvent.lunchInvAMount = Convert.ToDecimal(ds.Tables[0].Rows[0]["lunchInvAMount"].ToString());
+            courseEvent.lunchInvDate = ds.Tables[0].Rows[0]["lunchInvDate"].ToString();
+            courseEvent.lunchInvCode = ds.Tables[0].Rows[0]["lunchInvCode"].ToString();
+            courseEvent.afternoonTeaDays = Convert.ToInt32(ds.Tables[0].Rows[0]["afternoonTeaDays"].ToString());
+            courseEvent.afternoonTeaRate = Convert.ToDecimal(ds.Tables[0].Rows[0]["afternoonTeaRate"].ToString());
+            courseEvent.aTeaInvNo = ds.Tables[0].Rows[0]["aTeaInvNo"].ToString();
+            courseEvent.aTeaInvAMount = Convert.ToDecimal(ds.Tables[0].Rows[0]["aTeaInvAMount"].ToString());
+            courseEvent.aTeaInvDate = ds.Tables[0].Rows[0]["aTeaInvDate"].ToString();
+            courseEvent.aTeaInvCode = ds.Tables[0].Rows[0]["aTeaInvCode"].ToString();
+            courseEvent.venueHireDays = Convert.ToInt32(ds.Tables[0].Rows[0]["venueHireDays"].ToString());
+            courseEvent.venueHireRate = Convert.ToDecimal(ds.Tables[0].Rows[0]["venueHireRate"].ToString());
+            courseEvent.venueInvNo = ds.Tables[0].Rows[0]["venueInvNo"].ToString();
+            courseEvent.venueInvAMount = Convert.ToDecimal(ds.Tables[0].Rows[0]["venueInvAMount"].ToString());
+            courseEvent.venueInvDate = ds.Tables[0].Rows[0]["venueInvDate"].ToString();
+            courseEvent.venueInvCode = ds.Tables[0].Rows[0]["venueInvCode"].ToString();
+            courseEvent.poolHireDays = Convert.ToInt32(ds.Tables[0].Rows[0]["poolHireDays"].ToString());
+            courseEvent.poolHireRate = Convert.ToDecimal(ds.Tables[0].Rows[0]["poolHireRate"].ToString());
+            courseEvent.poolInvNo = ds.Tables[0].Rows[0]["poolInvNo"].ToString();
+            courseEvent.poolInvAMount = Convert.ToDecimal(ds.Tables[0].Rows[0]["poolInvAMount"].ToString());
+            courseEvent.poolInvDate = ds.Tables[0].Rows[0]["poolInvDate"].ToString();
+            courseEvent.poolInvCode = ds.Tables[0].Rows[0]["poolInvCode"].ToString();
+            courseEvent.avHireDays = Convert.ToInt32(ds.Tables[0].Rows[0]["avHireDays"].ToString());
+            courseEvent.avHireRate = Convert.ToDecimal(ds.Tables[0].Rows[0]["avHireRate"].ToString());
+            courseEvent.avInvNo = ds.Tables[0].Rows[0]["avInvNo"].ToString();
+            courseEvent.avInvAMount = Convert.ToDecimal(ds.Tables[0].Rows[0]["avInvAMount"].ToString());
+            courseEvent.avInvDate = ds.Tables[0].Rows[0]["avInvDate"].ToString();
+            courseEvent.avInvCode = ds.Tables[0].Rows[0]["avInvCode"].ToString();
+            courseEvent.manualFeePerparticipant = Convert.ToDecimal(ds.Tables[0].Rows[0]["manualFeePerparticipant"].ToString());
+            courseEvent.manualInvNo = ds.Tables[0].Rows[0]["manualInvNo"].ToString();
+            courseEvent.manualInvAMount = Convert.ToDecimal(ds.Tables[0].Rows[0]["manualInvAMount"].ToString());
+            courseEvent.manualInvDate = ds.Tables[0].Rows[0]["manualInvDate"].ToString();
+            courseEvent.manualInvCode = ds.Tables[0].Rows[0]["manualInvCode"].ToString();
+            courseEvent.sundrySupplies = Convert.ToDecimal(ds.Tables[0].Rows[0]["sundrySupplies"].ToString());
+            courseEvent.sundryInvNo = ds.Tables[0].Rows[0]["sundryInvNo"].ToString();
+            courseEvent.sundryInvAMount = Convert.ToDecimal(ds.Tables[0].Rows[0]["sundryInvAMount"].ToString());
+            courseEvent.sundryInvDate = ds.Tables[0].Rows[0]["sundryInvDate"].ToString();
+            courseEvent.sundryInvCode = ds.Tables[0].Rows[0]["sundryInvCode"].ToString();
+            courseEvent.isModified = ds.Tables[0].Rows[0]["isModified"].ToString();
+            courseEvent.isForeCastApproved = ds.Tables[0].Rows[0]["isForeCastApproved"].ToString();
+            courseEvent.isSignedOff = ds.Tables[0].Rows[0]["isSignedOff"].ToString();
+
+            return courseEvent;
         }
     }
 }

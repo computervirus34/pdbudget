@@ -13,7 +13,7 @@
     <form id="form1" runat="server">
         <div class="row clearfix">
                 <div class="col-sm-12" style="text-align: center;background-color:#007bFF;">
-                    <h3>Budget Application</h3>
+                    <h3 style="color:white;">Course Budgets</h3>
                     <br />
                 </div>
             </div>

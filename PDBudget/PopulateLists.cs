@@ -157,6 +157,14 @@ namespace PDBudget
             dtCourseLevelList = _reader.GetDataTableByCommandFromStoredProc("GetPDOtherExpenseInfo", ht);
             return dtCourseLevelList;
         }
-     
+
+        public DataTable GetCourseEventCode()
+        {
+            DataTable dtCourseEventList = new DataTable();
+            Hashtable ht = new Hashtable();
+            dtCourseEventList = _reader.GetDataTableByCommandFromStoredProc("GetCourseEventCode", ht);
+            return dtCourseEventList;
+        }
+
     }
 }

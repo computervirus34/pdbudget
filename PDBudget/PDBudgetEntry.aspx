@@ -665,19 +665,17 @@
     <style type="text/css">
         .main_menu {
             width: 100px;
-            background-color: #8AE0F2;
-            color: #000;
+            color: white;
             text-align: center;
             height: 30px;
             line-height: 30px;
             margin-right: 5px;
-            margin-top: 10px;
         }
 
         .level_menu {
             width: 110px;
-            background-color: #000;
-            color: #fff;
+            background-color: green;
+            color:white;
             text-align: center;
             height: 30px;
             line-height: 30px;
@@ -736,7 +734,7 @@
         <div class="container-fluid">
             <div class="row clearfix">
                 <div class="col-sm-12" style="text-align: center; background-color: #007bFF;">
-                    <h3>Budget Application</h3>
+                    <h3 style="color:white;">Course Budgets</h3>
                     <br />
                 </div>
             </div>
@@ -763,7 +761,7 @@
                 <div class="col-sm-3" style="text-align: center;">
                     <table>
                         <tr>
-                            <td id="userName">Welcome
+                            <td style="color:white;" id="userName">Welcome
                                 <asp:LoginName ID="LoginName1" runat="server" Font-Bold="true" />
                             </td>
                             <td id="Logout">
@@ -776,7 +774,7 @@
             <div class="row" style="position: sticky; background-color: darkcyan">
                 <a class="tablink" href="#generalInfo">General Info</a>
                 <a class="tablink" href="#locationDate">Location and Date</a>
-                <a class="tablink" href="#participant">Participant</a>
+                <a class="tablink" href="#participant">Participants</a>
                 <a class="tablink" href="#projectedIncome">Projected Income</a>
                 <a class="tablink" href="#expense">Expense(Ex. GST)</a>
                 <a class="tablink" href="#projectedProfitLoss">Projected Profit Loss</a>
@@ -808,6 +806,8 @@
                             </label>
                             <div class="form-group">
                                 <input type="text" id="txtCourseCode" runat="server" class="form-control" placeholder="Please enter course code" />
+                                <asp:DropDownList ID="ddlCourseCode" runat="server" CssClass="form-control dropdown">
+								</asp:DropDownList>
                             </div>
                         </div>
                     </div>
@@ -1001,7 +1001,7 @@
                                 Modify</button>&nbsp;&nbsp;
                             <button type="button" id="Button3" class="btn btn-success" onclick="AddNewCCCustomerComplain();">
                                 Submit</button>&nbsp;&nbsp;
-                            <button type="button" id="Button4" class="btn btn-primary" onclick="ClearFields();">
+                            <button type="button" id="btnPreview" class="btn btn-primary"">
                                 Preview</button>
                         </div>
                     </div>
@@ -4348,6 +4348,43 @@
 
         debugger;
 
+        $("#ddlCourseCode").hide();
+
+        $("#ddlCourseCode").change(function () {
+            debugger;
+            //var courseCode = $("#ddlCourseCode").val();
+            var courseCode = $("#ddlCourseCode option:selected").text();
+            if (courseCode != null || courseCode != "-1") {
+                $.ajax({
+                    url: 'PDBudgetEntry.aspx/GetCourseData',
+                    type: 'POST',
+                    dataType: 'json',
+                    contentType: 'application/json; charset=utf-8',
+                    data: "{'CourseCode':" + JSON.stringify(courseCode) + "}",
+                    success: function (response) {
+                        if (response.d != "") {
+                            setCourseInfo(response.d.courseEvent);
+                            setResourcePerson(response.d.ResourcePersons);
+                            setOtherExpenses(response.d.OtherExpenses);
+                        }
+                        else {
+
+                        }
+                    },
+                    error: function () {
+
+                    }
+                });
+
+                //alert("Error");
+            }
+        });
+
+        $("#btnPreview").click(function () {
+            $("#txtCourseCode").hide();
+            $("#ddlCourseCode").show();
+        });
+
         CalculateTotal();
 
         var user = '<%= Session["user"]%>';
@@ -5322,6 +5359,551 @@
         CalculateTotal();
     }
 
+    ///Rony
+
+    var i = 0;
+    var j = 0;
+    var k = 0;
+
+    function setCourseInfo(courseInfo) {
+        debugger;
+        $('#txtCourseCode').val(courseInfo.courseCode);
+        $('#ddlCourseName').val(courseInfo.courseName).change();
+        $('#txtAptifyID').val(courseInfo.aptifyId);
+        $('#ddlStatus').val(courseInfo.courseStatus).change();
+        $('#ddlGroup').val(courseInfo.group_).change();
+        $('#ddlCPDHours').val(courseInfo.CPDHours).change();
+        $('#ddlCourseLevel').val(courseInfo.CourseLevel).change();
+        $('#ddlCoHost').val(courseInfo.co_host).change();
+        $('#ddlDurationDays').val(courseInfo.CourseDurationDays).change();
+        $('#txtCoordinator').val(courseInfo.coordinator);
+        $('#ddlAdditionalGroup').val(courseInfo.Additional_group).change();
+        $('#ddlCountry').val(courseInfo.country).change();
+        $('#ddlState').val(courseInfo.state_).change();
+        $('#ddlMetroRegionalLocation').val(courseInfo.reg_metro_int).change();
+        $('#txtAddress').val(courseInfo.venue);
+        $('#ddlSuburb').val(courseInfo.suburb_city).change();
+        $('#txtZip').val(courseInfo.zipcode);
+        $('#txtCourseDate').val(courseInfo.courseDate);
+        $('#txtIterationBeginDate').val(courseInfo.StartDate);
+        $('#txtIterationEndDate').val(courseInfo.EndDate);
+        $('#txtTotalNumberOfPresentersOnly').val(courseInfo.NoPresenters);
+        $('#txtTotalNoOfConsultantsInput').val(courseInfo.totalConsultantIncPresenter);
+        $('#txtNofOfFreePlaces').val(courseInfo.numberofFreePlace);
+        $('#txtMinPayingParticipant').val(courseInfo.minimumParticipant);
+        $('#txtAvgPayingPaticipant').val(courseInfo.averageParticipant);
+        $('#txt40PerPayingParticipant').val(courseInfo.minimumAchieve40PerMargin);
+        $('#txtMaximumAvailable').val(courseInfo.maximumAvailable);
+        $('#txtOverheadContribution').val(courseInfo.contributionOverheadPercent);
+        $('#txtParticipantFeeEBDistantMin').val(setCurrency(courseInfo.participantFeeEBDistantMin));
+        $('#txtDiffBWSPMin').val(setCurrency(courseInfo.diffBWEBSP));
+        $('#txtParticipantPerEBDistantMin').val(courseInfo.participantPerEBDistant + '%');
+        $('#txtParticipantPerEBApaMin').val(courseInfo.participantPerEBApa + '%');
+        $('#txtParticipantPerEBNonMemberMin').val(courseInfo.participantPerEBNonMember + '%');
+        $('#txtParticipantPerNonDistantMin').val(courseInfo.participantPerNonDistant + '%');
+        $('#txtParticipantPerNonApaMin').val(courseInfo.participantPerNonApa + '%');
+        $('#txtParticipantPerNonMemberMin').val(courseInfo.participantPerNonMember + '%');
+        $('#txtActParticipantEBDistantMin').val(courseInfo.actparticipantEBDistant);
+        $('#txtActParticipantEBApaMin').val(courseInfo.actparticipantEBApa);
+        $('#txtActParticipantEBNonMemberMin').val(courseInfo.actparticipantEBNonMember);
+        $('#txtActParticipantNonDistantMin').val(courseInfo.actparticipantNonDistant);
+        $('#txtActParticipantNonApaMin').val(courseInfo.actparticipantNonApa);
+        $('#txtActParticipantNonMemberMin').val(courseInfo.actparticipantNonMember);
+        $('#txtSponsorshipMin').val(setCurrency(courseInfo.sponsorshipMin));
+        $('#txtDaysMTMin').val(courseInfo.morningTeaDays);
+        $('#txtRateMTMin').val(setCurrency(courseInfo.morningTeaRate));
+        $('#txtMorningTeaInvNum').val(courseInfo.teaInvNo);
+        $('#txtMorningTeaInvoice').val(courseInfo.teaInvAMount);
+        $('#Date1').val(courseInfo.teaInvDate);
+        $('#ddlMTMinExpCode').val(courseInfo.teaInvCode).change();
+        $('#txtDaysLMin').val(courseInfo.lunchDays);
+        $('#txtRateLMin').val(setCurrency(courseInfo.lunchRate));
+        $('#Text9').val(courseInfo.lunchInvNo);
+        $('#txtLunchInvoice').val(courseInfo.lunchInvAMount);
+        $('#Date2').val(courseInfo.lunchInvDate);
+        $('#ddlLMinExpCode').val(courseInfo.lunchInvCode).change();
+        $('#txtDaysATMin').val(courseInfo.afternoonTeaDays);
+        $('#txtRateATMin').val(setCurrency(courseInfo.afternoonTeaRate));
+        $('#Text17').val(courseInfo.aTeaInvNo);
+        $('#txtAfternoonTeaInvoice').val(courseInfo.aTeaInvAMount);
+        $('#Date3').val(courseInfo.aTeaInvDate);
+        $('#ddlATMinExpCode').val(courseInfo.aTeaInvCode).change();
+        $('#txtVenueHireDays').val(courseInfo.venueHireDays);
+        $('#txtVenueHireRate').val(setCurrency(courseInfo.venueHireRate));
+        $('#Text64').val(courseInfo.venueInvNo);
+        $('#txtVenueInvoice').val(courseInfo.venueInvAMount);
+        $('#Date12').val(courseInfo.venueInvDate);
+        $('#ddlVenueHireExpCode').val(courseInfo.venueInvCode).change();
+        $('#txtPoolHireDays').val(courseInfo.poolHireDays);
+        $('#txtPoolHireRate').val(setCurrency(courseInfo.poolHireRate));
+        $('#Text79').val(courseInfo.poolInvNo);
+        $('#txtPoolInvoice').val(courseInfo.poolInvAMount);
+        $('#Date13').val(courseInfo.poolInvDate);
+        $('#ddlPoolHireExpCode').val(courseInfo.poolInvCode).change();
+        $('#txtAVHireDays').val(courseInfo.avHireDays);
+        $('#txtAVHireRate').val(setCurrency(courseInfo.avHireRate));
+        $('#Text94').val(courseInfo.avInvNo);
+        $('#txtAvInvoice').val(courseInfo.avInvAMount);
+        $('#Date14').val(courseInfo.avInvDate);
+        $('#ddlAVHireExpCode').val(courseInfo.avInvCode).change();
+        $('#txtCourseManualFeeMin').val(setCurrency(courseInfo.manualFeePerparticipant));
+        $('#txtManualInv').val(courseInfo.manualInvNo);
+        $('#txtManualInvAmount').val(courseInfo.manualInvAMount);
+        $('#manualInvDate').val(courseInfo.manualInvDate);
+        $('#ddlCourseManualsExpCode').val(courseInfo.manualInvCode).change();
+        $('#txtSundryAmount').val(setCurrency(courseInfo.sundrySupplies));
+        $('#sundryInvTotal').val(courseInfo.sundryInvNo);
+        $('#txtSundryInvoice').val(courseInfo.sundryInvAMount);
+        $('#Date7').val(courseInfo.sundryInvDate);
+        $('#ddlSundaySuppliesExpCode').val(courseInfo.sundryInvCode).change();
+        fnCalculatePresenterSubTotal();
+        fnCalculateTutorSubTotal();
+        fnCalculateConvenorSubTotal();
+        CalculateTotal();
+    }
+
+    function setOtherExpenses(otherExpenses) {
+        if (otherExpenses.length > 0) {
+            otherExpenses.forEach(populateOtherExpence)
+        }
+    }
+
+    function populateOtherExpence(item, index) {
+        //if (index <= 0) {
+        //	$('#otherExpense').val(item.otherExpenseName);
+        //	$('#ddlOtherExpenseCode').val(item.expenseCode).change();
+        //	$('#invNoOtherExp').val(item.invNumber);
+        //	$('#invAmountOtherExp').val(item.invAmount);
+        //	$('#amountOtherExp').val(item.amount);
+        //	$('#datePaidOtherExp').val(item.datePaid);
+        //}
+
+        if (index >= 0) {
+
+
+            debugger;
+
+            var optionsConv = item.invExpCode;
+            var optionsConvExpCode = item.expenseCode;
+            var otherExpense = item.otherExpenseName;
+            var amountOtherExp = item.amount;
+            var datePaidOtherExp = item.datePaid;
+            var invNoOtherExp = item.invNumber;
+            var invAmountOtherExp = item.invAmount;
+
+            var isValidItem = true;
+            if (!($('#otherExpense').val().trim() != '')) {
+                isValidItem = false;
+                $('#otherExpense').siblings('span.error').css('visibility', 'visible');
+            }
+
+            var convenorDiv = '<tr class="otherExpenseListOut">' +
+                '<td><center><input type="text" id="otherExpense1" name="otherExpense1" class="otherExpenseOutputTextBox othExName" Style="width: 100%!important;" value="' + otherExpense + '" disabled/></center></td>' +
+                '<td style="text-align: center; background-color: White;"></td>' +
+                '<td><input type="text" class="otherExpenseOutputTextBox othExCode" Style="width: 100%!important;" id="otherExpense2" name="otherExpense2" value="' + optionsConv + '" disabled/></td>' +
+                //      '<td><input type="text" class="OtherExpenseInput otherExpPerCalClass" onkeyup="fnOtherExpPerCal();" id="amountOtherExpPer"/></td>' +
+                '<td><center><input type="text" id="amountOtherExpPer" class="OtherExpenseInput otherExpCalClass othExPer" onkeyup="CalculateTotal();" /></center></td>' +
+                '<td><input type="text" class="tblOtherInvoiceCss otherExpCalClass othExAmt" id="amountOtherExp1" name="amountOtherExp1" value="' + amountOtherExp + '" disabled/></td>' +
+                '<td style="text-align: center; background-color: White;"></td>' +
+                '<td><input class="tblOtherExpenseCss othExInvNo" id="invNoOtherExp1" name="invNoOtherExp1" value="' + invNoOtherExp + '" disabled/></td>' +
+                '<td><input class="tblOtherExpenseCss othExInvAmt" id="invAmountOtherExp1" name="invAmountOtherExp1" value="' + invAmountOtherExp + '" disabled/></td>' +
+                '<td><input type="date" class="dynamicDateCss othExInvDate" id="datePaidOtherExp1" name="datePaidOtherExp1" value="' + datePaidOtherExp + '"/></td>' +
+                '<td><input type="text" class="tblOtherExpenseCss othExInvCode" id="otherExpenseCode1" name="otherExpenseCode1" value="' + optionsConvExpCode + '" disabled/></td>' +
+                '<td><center><button type="button" id="btnDelete" class="deleteOtherExp btn btn-danger btn-group-small">-</button></center></td>' +
+                '</tr>';
+            var convenorDiv1 = '<tr class="otherExpenseListOut">' +
+                '<td><center><input type="text" id="otherExpense1" name="otherExpense1" class="otherExpenseOutputTextBox othExName" Style="width: 100%!important;" value="' + otherExpense + '" disabled/></center></td>' +
+                '<td style="text-align: center; background-color: White;"></td>' +
+                '<td><input type="text" class="otherExpenseOutputTextBox othExCode" Style="width: 100%!important;" id="otherExpense2" name="otherExpense2" value="' + optionsConv + '" disabled/></td>' +
+                '<td><input type="text" class="tblOtherInvoiceCss otherExpPerCalClass othExPer" id="amountOtherExpPer1" disabled/></td>' +
+                '<td><input type="text" class="tblOtherInvoiceCss otherExpCalClass othExAmt" id="amountOtherExp1" name="amountOtherExp1" value="' + amountOtherExp + '" disabled/></td>' +
+                '<td style="text-align: center; background-color: White;"></td>' +
+                '<td><input class="tblOtherExpenseCss othExInvNo" id="invNoOtherExp1" name="invNoOtherExp1" value="' + invNoOtherExp + '" disabled/></td>' +
+                '<td><input class="tblOtherExpenseCss othExInvAmt" id="invAmountOtherExp1" name="invAmountOtherExp1" value="' + invAmountOtherExp + '" disabled/></td>' +
+                '<td><input type="date" class="dynamicDateCss othExInvDate" id="datePaidOtherExp1" name="datePaidOtherExp1" value="' + datePaidOtherExp + '"/></td>' +
+                '<td><input type="text" class="tblOtherExpenseCss othExInvCode" id="otherExpenseCode1" name="otherExpenseCode1" value="' + optionsConvExpCode + '" disabled/></td>' +
+                '<td><center><button type="button" id="btnDelete" class="deleteOtherExp btn btn-danger btn-group-small">-</button></center></td>' +
+                '</tr>';
+            var rowCount = $('#otherExpenseTable1 >tbody >tr').length;
+            if (rowCount == 0) {
+                $('#otherExpenseTable1').find('tbody').append(convenorDiv);
+            }
+            else if (rowCount > 0) {
+                $('#otherExpenseTable1').find('tbody').append(convenorDiv1);
+            }
+            $("#otherExpenseTable1").show();
+        }
+    }
+
+    function setResourcePerson(resourcePersons) {
+        i = 0;
+        j = 0;
+        k = 0;
+        if (resourcePersons.length > 0) {
+            resourcePersons.forEach(populateResourcePerson)
+        }
+    }
+
+    function populateResourcePerson(item, index) {
+        debugger;
+        if (item.resource_person_id > 0)
+            if (item.rtype == "P") {
+                if (i == 0) {
+                    $('#ddlPresenters').val(item.resource_person_id).change();
+                    $('#hourPresenter').val(item.hours_);
+                    $('#sessionPresenter').val(item.session_);
+                    $('#ratePresenter').val(setCurrency(item.rate));
+                    $('#accomPresenter').val(setCurrency(item.accomadation));
+                    $('#travelExpPresenter').val(setCurrency(item.travelEx));
+                    $('#taxiPetrolPresenter').val(setCurrency(item.taxi));
+                    $('#invNoPresenter').val(setCurrency(item.invNumber));
+                    $('#invAmountPresenter').val(setCurrency(item.amount));
+                    $('#datePaidPresenter').val(item.datePaid);
+                    $('#mealPresenter').val(setCurrency(item.meal));
+                } else {
+                    var optionsPre = $('#ddlPresenters').html();
+                    var optionsPreExpCode = $('#ddlPresenterExpCode').html();
+                    //optionsPreExpCode.replace();
+                    var presenterDiv = '<tr class="presenterList">' +
+                        '<td><center><select id="ddlPresenters" class="form-control presenterID" value="' + item.resource_person_id + '" >' + optionsPre + '</select></center></td>' +
+                        '<td><input type="text" id="sessionPresenter" value="' + item.session_ + '" class="OtherExpenseInput session_"/></td>' +
+                        '<td><center><input type="text" id="hourPresenter" value="' + item.hours_ + '"  class="OtherExpenseInput expPresenterCalClass hours_"/></center></td>' +
+                        '<td><center><input type="text" id="ratePresenter" value="' + setCurrency(item.rate) + '"class="OtherExpenseInput expPresenterCalClass rate"/></center></td>' +
+                        '<td><input type="text" id="feeSubTotalPresenter" class="OtherExpenseInput feeSubTotalPresenter" disabled/></td>' +
+                        '<td></td>' +
+                        '<td><center><input type="text" id="accomPresenter" value="' + setCurrency(item.accomadation) + '" class="OtherExpenseInput expPresenterCalClass accomadation" /></center></td>' +
+                        '<td><center><input type="text" id="travelExpPresenter" value="' + setCurrency(item.travelEx) + '" class="OtherExpenseInput expPresenterCalClass travelEx" /></center></td>' +
+                        '<td><center><input type="text" id="mealPresenter" value="' + setCurrency(item.meal) + '" class="OtherExpenseInput expPresenterCalClass meal" /></center></td>' +
+                        '<td><center><input type="text" id="taxiPetrolPresenter" value="' + setCurrency(item.taxi) + '" class="OtherExpenseInput expPresenterCalClass taxi"/></center></td>' +
+                        '<td><input type="text" id="expSubTotalPresenter" class="OtherExpenseInput expSubTotalPresenter" disabled/></td>' +
+                        '<td><input type="text" id="totalPresenter" class="OtherExpenseInput totalPresenter" disabled/></td>' +
+                        '<td></td>' +
+                        '<td><input type="text" id="invNoPresenter" value="' + item.invNumber + '" class="tdInvoiceCss invNumber" /></td>' +
+                        '<td><center><input type="text" id="invAmountPresenter"value="' + setCurrency(item.amount) + '" class="tdInvoiceCss expPresenterCalClass invAmountPresenter amount" /></center></td>' +
+                        '<td><input type="date" id="datePaidPresenter" value="' + item.datePaid + '" class="tdInvoiceCss datePaid" /></td>' +
+
+                        '<td><center><select id="ddlPresenterExpCode" class="tdInvoiceCss form-control expenseCode" >' + setCurrency(optionsPreExpCode) + '</select></center></td>' +
+                        '<td><center><button type="button" id="btnDelete" class="deletePresenter btn btn btn-danger btn-xs">Remove</button></center></td>' +
+                        '</tr>'
+                        + '<tr class="presenterList">'
+                        + '<td colspan="13"></td>'
+                        + '<td><input class="tdInvoiceCss invNumber" id="invNoPresenterAccom" name="invNoPresenterAccom" /></td>'
+                        + '<td>'
+                        + '<input '
+                        + 'class="tdInvoiceCss expPresenterCalClass invAmountPresenter amount" id="invAmountPresenterAccom" name="invAmountPresenterAccom"/>'
+                        + '</td>'
+                        + '<td>'
+                        + '<input type="date" id="datePaidPresenterAccom" name="datePaidPresenterAccom" class="tdInvoiceCss datePaid"'
+                        + 'onkeyup="ResetErrorMsg();" />'
+                        + '</td>'
+                        + '<td>'
+                        + '<input type="text" id="expCodePresenterAccom" name="expCodePresenterAccom" class="tdInvoiceCss expenseCode"'
+                        + 'onkeyup="ResetErrorMsg();" />'
+                        + '</td>'
+                        + '<td></td>'
+                        + '</tr>'
+                        + '<tr class="presenterList">'
+                        + '<td colspan="13"></td>'
+                        + '<td>'
+                        + '<input class="tdInvoiceCss invNumber" id="invNoPresenterTvExp" name="invNoPresenterTvExp" />'
+                        + '</td>'
+                        + '<td>'
+                        + '<input '
+                        + 'class="tdInvoiceCss expPresenterCalClass invAmountPresenter amount" id="invAmountPresenterTravel" name="invAmountPresenterTravel"/>'
+                        + '</td>'
+                        + '<td>'
+                        + '<input type="date" id="datePaidPresenterTvExp" name="datePaidPresenterTvExp" class="tdInvoiceCss datePaid"'
+                        + 'onkeyup="ResetErrorMsg();" />'
+                        + '</td>'
+                        + '<td>'
+                        + '<input type="text" id="expCodePresenterTvExp" name="expCodePresenterTvExp" class="tdInvoiceCss expenseCode"'
+                        + 'onkeyup="ResetErrorMsg();" />'
+                        + '</td>'
+                        + '<td></td>'
+                        + '</tr>'
+                        + '<tr class="presenterList">'
+                        + '<td colspan="13"></td>'
+                        + '<td>'
+                        + '<input class="tdInvoiceCss invNumber" id="invNoPresenterMeal" name="invNoPresenterMeal" />'
+                        + '</td>'
+                        + '<td>'
+                        + '<input '
+                        + 'class="tdInvoiceCss expPresenterCalClass invAmountPresenter amount" id="invAmountPresenterMeal" name="invAmountPresenterMeal"/>'
+                        + '</td>'
+                        + '<td>'
+                        + '<input type="date" id="datePaidPresenterMeal" name="datePaidPresenterMeal" class="tdInvoiceCss datePaid"'
+                        + 'onkeyup="ResetErrorMsg();" />'
+                        + '</td>'
+                        + '<td>'
+                        + '<input type="text" id="expCodePresenterMeal" name="expCodePresenterMeal" class="tdInvoiceCss expenseCode"'
+                        + 'onkeyup="ResetErrorMsg();" />'
+                        + '</td>'
+                        + '<td></td>'
+                        + '</tr>'
+                        + '<tr class="presenterList">'
+                        + '<td colspan="13"></td>'
+                        + '<td>'
+                        + '<input class="tdInvoiceCss invNumber" id="invNoPresenterTaxi" name="invNoPresenterTaxi" />'
+                        + '</td>'
+                        + '<td>'
+                        + '<input '
+                        + 'class="tdInvoiceCss expPresenterCalClass invAmountPresenter amount" id="invAmountPresenterTaxi" name="invAmountPresenterTaxi"/>'
+                        + '</td>'
+                        + '<td>'
+                        + '<input type="date" id="datePaidPresenterTaxi" name="datePaidPresenterTaxi" class="tdInvoiceCss datePaid"'
+                        + 'onkeyup="ResetErrorMsg();" />'
+                        + '</td>'
+                        + '<td>'
+                        + '<input type="text" id="expCodePresenterTaxi" name="expCodePresenterTaxi" class="tdInvoiceCss expenseCode"'
+                        + 'onkeyup="ResetErrorMsg();" />'
+                        + '</td>'
+                        + '<td></td>'
+                        + '</tr>';
+                    $('#presenterTable').append(presenterDiv); // Adding these controls to Main table class  
+                }
+                i++;
+            } else if (item.rtype == "T") {
+                if (j == 0) {
+                    $('#ddlTutors').val(item.resource_person_id).change();
+                    $('#hourTutor').val(item.hours_);
+                    $('#sessionTutor').val(item.session_);
+                    $('#rateTutor').val(setCurrency(item.rate));
+                    $('#accomTutor').val(setCurrency(item.accomadation));
+                    $('#travelExpTutor').val(setCurrency(item.travelEx));
+                    $('#taxiPetrolTutor').val(setCurrency(item.taxi));
+                    $('#invNoTutor').val(setCurrency(item.invNumber));
+                    $('#invAmountTutor').val(setCurrency(item.amount));
+                    $('#datePaidTutor').val(item.datePaid);
+                    $('#mealTutor').val(setCurrency(item.meal));
+
+                } else {
+                    var optionsTutor = $('#ddlTutors').html();
+                    var optionsTutorExpCode = $('#ddlTutorExpCode').html();
+                    var tutorDiv = '<tr class="tutorList">' +
+                        '<td><center><select id="ddlTutors" class="form-control" value="' + item.resource_person_id + '" >' + optionsTutor + '</select></center></td>' +
+                        '<td><input type="text" id="sessionTutor" value="' + item.session_ + '" class="OtherExpenseInput"/></td>' +
+                        '<td><center><input type="text" id="hourTutor" value="' + item.hours_ + '" class="OtherExpenseInput expTutorCalClass"/></center></td>' +
+                        '<td><center><input type="text" id="rateTutor" value="' + setCurrency(item.rate) + '" class="OtherExpenseInput expTutorCalClass"/></center></td>' +
+                        '<td><input type="text" id="feeSubTotalTutor" class="OtherExpenseInput feeSubTotalTutor" disabled/></td>' +
+                        '<td></td>' +
+                        '<td><center><input type="text" id="accomTutor" value="' + setCurrency(item.accomadation) + '" class="OtherExpenseInput expTutorCalClass" /></center></td>' +
+                        '<td><center><input type="text" id="travelExpTutor" value="' + setCurrency(item.travelEx) + '"  class="OtherExpenseInput expTutorCalClass" /></center></td>' +
+                        '<td><center><input type="text" id="mealTutor" value="' + setCurrency(item.meal) + '"  class="OtherExpenseInput expTutorCalClass" /></center></td>' +
+                        '<td><center><input type="text" id="taxiPetrolTutor" value="' + setCurrency(item.taxi) + '"  class="OtherExpenseInput expTutorCalClass"/></center></td>' +
+                        '<td><input type="text" id="expSubTotalTutor" class="OtherExpenseInput expSubTotalTutor" disabled/></td>' +
+                        '<td><input type="text" id="totalTutor" class="OtherExpenseInput totalTutor" disabled/></td>' +
+                        '<td></td>' +
+                        '<td><input type="text" id="invNoTutor"  value="' + item.invNumber + '" class="tdInvoiceCss" /></td>' +
+                        '<td><center><input type="text" id="invAmountTutor" value="' + setCurrency(item.amount) + '"  class="tdInvoiceCss expTutorCalClass invAmountTutor" /></center></td>' +
+                        '<td><input type="date" id="datePaidTutor" value="' + item.datePaid + '"  class="tdInvoiceCss" /></td>' +
+                        '<td><center><select id="ddlTutorExpCode" class="tdInvoiceCss form-control" >' + optionsTutorExpCode + '</select></center></td>' +
+                        '<td><center><button type="button" id="btnDelete" class="deleteTutor btn btn btn-danger btn-xs">Remove</button></center></td>' +
+                        '</tr>' +
+                        '<tr class="tutorList">' +
+                        '<td colspan="13"></td>' +
+                        '<td>' +
+                        '<input class="tdInvoiceCss txtInvNoTutor invNumber" id="txtInvNoTutorAccom" />' +
+                        '</td>' +
+                        '<td>' +
+                        '<input' +
+                        '	class="tdInvoiceCss expTutorCalClass invAmountTutor amount" id="invAmountTutorAccom" name="invAmountTutor" />' +
+                        '</td>' +
+                        '<td>' +
+                        '<input type="date" id="dateInvoiceTutorAccom" class="tdInvoiceCss dateInvoiceTutor datePaid" />' +
+                        '</td>' +
+                        '<td>' +
+                        '<input type="text" id="expCodeTutorAccom" name="expCodePresenterAccom" class="tdInvoiceCss expCodePresenter expenseCode"' +
+                        'onkeyup = "ResetErrorMsg();" /> ' +
+                        '</td>' +
+                        '<td>' +
+                        '</td>' +
+                        '</tr>' +
+                        '<tr class="tutorList">' +
+                        '<td colspan="13"></td>' +
+                        '<td>' +
+                        '<input class="tdInvoiceCss txtInvNoTutor invNumber" id="txtInvNoTutorTravel" />' +
+                        '</td>' +
+                        '<td>' +
+                        '<input' +
+                        '	class="tdInvoiceCss expTutorCalClass invAmountTutor amount" id="invAmountTutorTravel" name="invAmountTutorTravel"' +
+                        '	min="1" />' +
+                        '</td>' +
+                        '<td>' +
+                        '<input type="date" id="dateInvoiceTutorTravel" class="tdInvoiceCss dateInvoiceTutor datePaid" />' +
+                        '</td>' +
+                        '<td>' +
+                        '<input type="text" id="expCodeTutorTravel" name="expCodeTutorTravel" class="tdInvoiceCss expCodePresenter expenseCode"' +
+                        'onkeyup = "ResetErrorMsg();" /> ' +
+                        '</td>' +
+                        '<td>' +
+                        '</td>' +
+                        '</tr>' +
+                        '<tr class="tutorList">' +
+                        '<td colspan="13"></td>' +
+                        '<td>' +
+                        '<input class="tdInvoiceCss txtInvNoTutor invNumber" id="txtInvNoTutorMeal" />' +
+                        '</td>' +
+                        '<td>' +
+                        '<input' +
+                        '	class="tdInvoiceCss expTutorCalClass invAmountTutor amount" id="invAmountTutorMeal" name="invAmountTutorMeal"/>' +
+                        '</td>' +
+                        '<td>' +
+                        '<input type="date" id="dateInvoiceTutorMeal" class="tdInvoiceCss dateInvoiceTutor datePaid" />' +
+                        '</td>' +
+                        '<td>' +
+                        '<input type="text" id="expCodeTutorMeal" name="expCodePresenterAccom" class="tdInvoiceCss expCodePresenter expenseCode"' +
+                        'onkeyup = "ResetErrorMsg();" /> ' +
+                        '</td>' +
+                        '<td>' +
+                        '</td>' +
+                        '</tr>' +
+                        '<tr class="tutorList">' +
+                        '<td colspan="13"></td>' +
+                        '<td>' +
+                        '<input class="tdInvoiceCss txtInvNoTutor invNumber" id="txtInvNoTutorTaxi" />' +
+                        '</td>' +
+                        '<td>' +
+                        '<input' +
+                        '	class="tdInvoiceCss expTutorCalClass invAmountTutor amount" id="invAmountTutorTaxi" name="invAmountTutorTaxi"' +
+                        '	min="1" />' +
+                        '</td>' +
+                        '<td>' +
+                        '<input type="date" id="dateInvoiceTutorTaxi" class="tdInvoiceCss dateInvoiceTutor datePaid" />' +
+                        '</td>' +
+                        '<td>' +
+                        '<input type="text" id="expCodeTutorTaxi" name="expCodePresenterAccom" class="tdInvoiceCss expCodePresenter expenseCode"' +
+                        'onkeyup = "ResetErrorMsg();" /> ' +
+                        '</td>' +
+                        '<td>' +
+                        '</td>' +
+                        '</tr>';
+                    $('#tutorTable').append(tutorDiv); // Adding these controls to Main table class 
+                }
+
+
+                j++;
+            } else if (item.rtype == "C") {
+
+                if (k == 0) {
+                    $('#ddlConvenors').val(item.resource_person_id).change();
+                    $('#hourConvenor').val(item.hours_);
+                    $('#sessionConvenor').val(item.session_);
+                    $('#rateConvenor').val(setCurrency(item.rate));
+                    $('#accomConvenor').val(setCurrency(item.accomadation));
+                    $('#travelExpConvenor').val(setCurrency(item.travelEx));
+                    $('#taxiPetrolConvenor').val(setCurrency(item.taxi));
+                    $('#invNoConvenor').val(setCurrency(item.invNumber));
+                    $('#invAmountConvenor').val(setCurrency(item.amount));
+                    $('#datePaidConvenor').val(item.datePaid);
+                    $('#mealConvenor').val(setCurrency(item.meal));
+                } else {
+                    debugger;
+                    var optionsConv = $('#ddlConvenors').html();
+                    var optionsConvExpCode = $('#ddlConvenorExpCode').html();
+                    var convenorDiv = '<tr class="convenorList">' +
+                        '<td><center><select id="ddlConvenors" class="form-control presenterID" value="' + item.resource_person_id + '" >' + optionsConv + '</select></center></td>' +
+                        '<td><input type="text" id="sessionConvenor"  value="' + item.session_ + '" class="OtherExpenseInput session_"/></td>' +
+                        '<td><center><input type="text" id="hourConvenor" value="' + item.hours_ + '" class="OtherExpenseInput expConvenorCalClass hours_"/></center></td>' +
+                        '<td><center><input type="text" id="rateConvenor" value="' + setCurrency(item.rate) + '" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" placeholder="rate" class="OtherExpenseInput expConvenorCalClass rate" /></center></td>' +
+                        '<td><input type="text" id="feeSubTotalConvenor" class="OtherExpenseInput feeSubTotalConvenor" disabled/></td>' +
+                        '<td></td>' +
+                        '<td><center><input type="text" id="accomConvenor" value="' + setCurrency(item.accomadation) + '"  pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" placeholder="amount" class="OtherExpenseInput expConvenorCalClass accomadation" /></center></td>' +
+                        '<td><center><input type="text" id="travelExpConvenor" value="' + setCurrency(item.travelEx) + '" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" placeholder="amount" class="OtherExpenseInput expConvenorCalClass travelEx meal" /></center></td>' +
+                        '<td><center><input type="text" id="mealConvenor" value="' + setCurrency(item.meal) + '"  pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" placeholder="amount" class="OtherExpenseInput expConvenorCalClass taxi" /></center></td>' +
+                        '<td><center><input type="text" id="taxiPetrolConvenor" value="' + setCurrency(item.taxi) + '"  pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" placeholder="amount" class="OtherExpenseInput expConvenorCalClass" /></center></td>' +
+                        '<td><input type="text" id="expSubTotalConvenor" class="OtherExpenseInput expSubTotalConvenor" disabled/></td>' +
+                        '<td><input type="text" id="totalConvenor" class="OtherExpenseInput totalConvenor" disabled/></td>' +
+                        '<td></td>' +
+                        '<td><input type="text" id="invNoConvenor" value="' + item.invNumber + '"  class="tdInvoiceCss invNumber" /></td>' +
+                        '<td><center><input type="text" id="invAmountConvenor" value="' + setCurrency(item.amount) + '"   class="tdInvoiceCss expConvenorCalClass invAmountConvenor amount" /></center></td>' +
+                        '<td><input type="date" id="datePaidConvenor" value="' + item.datePaid + '" class="tdInvoiceCss datePaid" /></td>' +
+                        '<td><center><select id="ddlConvenorExpCode" class="tdInvoiceCss form-control expenseCode" >' + optionsConvExpCode + '</select></center></td>' +
+                        '<td><center><button type="button" id="btnDelete" class="deleteConvenor btn btn btn-danger btn-xs">Remove</button></center></td>' +
+                        '</tr>' +
+                        '<tr class="convenorList">' +
+                        '<td colspan="13"></td>' +
+                        '<td>' +
+                        '<input class="tdInvoiceCss txtInvNoConvenor invNumber" id="txtInvNoConvenorAccom" />' +
+                        '</td>' +
+                        '<td>' +
+                        '<input' +
+                        '	class="tdInvoiceCss expConvenorCalClass invAmountConvenor amount" id="invAmountConvenorAccom" name="invAmountConvenor" />' +
+                        '</td>' +
+                        '<td>' +
+                        '<input type="date" id="dateInvoiceConvenorAccom" class="tdInvoiceCss dateInvoiceConvenor datePaid" />' +
+                        '</td>' +
+                        '<td>' +
+                        '<input type="text" id="expCodeConvenorAccom" name="expCodeConvenorAccom" class="tdInvoiceCss expCodeConvenor expenseCode"' +
+                        '		onkeyup="ResetErrorMsg();" />' +
+                        '</td>' +
+                        '<td>' +
+                        '</td>' +
+                        '</tr>' +
+                        '<tr class="convenorList">' +
+                        '<td colspan="13"></td>' +
+                        '<td>' +
+                        '<input class="tdInvoiceCss txtInvNoConvenor invNumber" id="txtInvNoConvenorTravel" />' +
+                        '</td>' +
+                        '<td>' +
+                        '<input' +
+                        '	class="tdInvoiceCss expConvenorCalClass invAmountConvenor amount" id="invAmountConvenorTravel" name="invAmountConvenorTravel"' +
+                        '	min="1" />' +
+                        '</td>' +
+                        '<td>' +
+                        '<input type="date" id="dateInvoiceConvenorTravel" class="tdInvoiceCss dateInvoiceConvenor datePaid" />' +
+                        '</td>' +
+                        '<td>' +
+                        '<input type="text" id="expCodeConvenorTravel" name="expCodeConvenorTravel" class="tdInvoiceCss expCodeConvenor expenseCode"' +
+                        '		onkeyup="ResetErrorMsg();" />' +
+                        '</td>' +
+                        '<td>' +
+                        '</td>' +
+                        '</tr>' +
+                        '<tr class="convenorList">' +
+                        '<td colspan="13"></td>' +
+                        '<td>' +
+                        '<input class="tdInvoiceCss txtInvNoConvenor invNumber" id="txtInvNoConvenorMeal" />' +
+                        '</td>' +
+                        '<td>' +
+                        '<input' +
+                        '	class="tdInvoiceCss expConvenorCalClass invAmountConvenor amount" id="invAmountConvenorMeal" name="invAmountConvenorMeal"/>' +
+                        '</td>' +
+                        '<td>' +
+                        '<input type="date" id="dateInvoiceConvenorMeal" class="tdInvoiceCss dateInvoiceConvenor datePaid" />' +
+                        '</td>' +
+                        '<td>' +
+                        '<input type="text" id="expCodeConvenorMeal" name="expCodeConvenorAccom" class="tdInvoiceCss expCodeConvenor expenseCode"' +
+                        '		onkeyup="ResetErrorMsg();" />' +
+                        '</td>' +
+                        '<td>' +
+                        '</td>' +
+                        '</tr>' +
+                        '<tr class="convenorList">' +
+                        '<td colspan="13"></td>' +
+                        '<td>' +
+                        '<input class="tdInvoiceCss txtInvNoConvenor invNumber" id="txtInvNoConvenorTaxi" />' +
+                        '</td>' +
+                        '<td>' +
+                        '<input' +
+                        '	class="tdInvoiceCss expConvenorCalClass invAmountConvenor amount" id="invAmountConvenorTaxi" name="invAmountConvenorTaxi"' +
+                        '	min="1" />' +
+                        '</td>' +
+                        '<td>' +
+                        '<input type="date" id="dateInvoiceConvenorTaxi" class="tdInvoiceCss dateInvoiceConvenor datePaid" />' +
+                        '</td>' +
+                        '<td>' +
+                        '<input type="text" id="expCodeConvenorTaxi" name="expCodeConvenorAccom" class="tdInvoiceCss expCodeConvenor expenseCode"' +
+                        '		onkeyup="ResetErrorMsg();" />' +
+                        '</td>' +
+                        '<td>' +
+                        '</td>' +
+                        '</tr>';
+                    $('#convenorTable').append(convenorDiv); // Adding these controls to Main table class 
+                }
+
+                k++;
+            }
+    }
 </script>
 <script type="text/javascript">
     // Jquery Dependency
@@ -6074,6 +6656,7 @@
         $("#ddlMetroRegionalLocation").val($("#ddlMetroRegionalLocation option:selected").val());
         $("#ddlCourseLevel").val($("#ddlCourseLevel option:selected").val());
         $("#ddlSuburb").val($("#ddlSuburb option:selected").val());
+        //$("#ddlCourseCode").val($("#ddlCourseCode option:selected").val());
     });
 </script>
 
@@ -6091,6 +6674,7 @@
         $("#ddlMetroRegionalLocation").select2();
         $("#ddlCourseLevel").select2();
         $("#ddlSuburb").select2();
+        //$("#ddlCourseCode").select2();
     });
 </script>
 </html>

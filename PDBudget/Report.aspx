@@ -12,10 +12,10 @@
 
     <script type="text/javascript" src="scripts/bootstrap.min.js"></script>
     <style type="text/css">
-        .main_menu {
+         .main_menu {
             width: 100px;
-            background-color: #8AE0F2;
-            color: #000;
+            color: white !important;
+            background-color:green !important;
             text-align: center;
             height: 30px;
             line-height: 30px;
@@ -24,8 +24,8 @@
 
         .level_menu {
             width: 110px;
-            background-color: #000;
-            color: #fff;
+            background-color: green;
+            color:white;
             text-align: center;
             height: 30px;
             line-height: 30px;
@@ -44,9 +44,10 @@
 		font-size:14px;
 		padding:0;
 		border:1px solid #ccc;
-        height:200px;
+        height:500px;
+        width:100%;
 	}
-	thead th{
+ 	thead th{
 		top:0;
 		position:sticky;
 		background-color:#666;
@@ -60,7 +61,7 @@
 	th,td{
 		padding:0;
 		outline:1px solid #ccc;
-        background-color:aquamarine;
+        background-color:white;
 		border:none;
 		outline-offset:-1px;
 		padding-left:5px;
@@ -71,66 +72,63 @@
 		height:25px;
 	}
 	.col-id-no-1{
-		left:20px;
+		left:0px;
 		position:sticky;
 	}
 	.col-id-no-2{
-		left:90px;
+		left:70px;
 		position:sticky;
 	}
     .col-id-no-3{
-		left:160px;
+		left:140px;
 		position:sticky;
 	}
     .col-id-no-4{
-		left:230px;
+		left:210px;
 		position:sticky;
 	}
     .col-id-no-5{
-		left:300px;
+		left:280px;
 		position:sticky;
 	}
     .col-id-no-6{
-		left:370px;
+		left:350px;
 		position:sticky;
 	}
     .col-id-no-7{
-		left:440px;
+		left:420px;
 		position:sticky;
 	}
     .col-id-no-8{
-		left:510px;
+		left:490px;
 		position:sticky;
 	}
     .col-id-no-9{
-		left:580px;
+		left:560px;
 		position:sticky;
 	}
     .col-id-no-10{
-		left:650px;
+		left:630px;
 		position:sticky;
 	}
 
     .col-id-no-11{
-		left:720px;
+		left:700px;
 		position:sticky;
 	}
     .col-id-no-12{
-		left:790px;
+		left:770px;
 		position:sticky;
 	}
     .col-id-no-13{
-		left:860px;
+		left:840px;
 		position:sticky;
 	}
     .col-id-no-14{
-		left:930px;
+		left:910px;
 		position:sticky;
 	}
-    .col-id-no-15{
-		left:950px;
-		position:sticky;
-	}
+    
 	.fixed-header{
 		z-index:50;
 	}
@@ -143,7 +141,7 @@
     
     .tableFixHead          { overflow-y: auto; height: 500px; }
     .tableFixHead thead th { position: sticky; top: 0; }
-
+    #userName {background-color:green; color:white !important;border:none;}
     </style>
 </head>
 <body>
@@ -151,7 +149,7 @@
         <div class="container-fluid">
             <div class="row clearfix">
                 <div class="col-sm-12" style="text-align: center; background-color: #007bFF;">
-                    <h3>Budget Application</h3>
+                    <h3 style="color:white;">Course Budgets</h3>
                     <br />
                 </div>
             </div>
@@ -178,7 +176,7 @@
                 <div class="col-sm-3" style="text-align: center;">
                     <table>
                         <tr>
-                            <td id="userName">Welcome
+                            <td style="color:white !important;" id="userName">Welcome
                                 <asp:LoginName ID="LoginName1" runat="server" Font-Bold="true" />
                             </td>
                             <td id="Logout">
