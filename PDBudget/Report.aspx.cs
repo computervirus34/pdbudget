@@ -48,7 +48,7 @@ namespace PDBudget
                     StringBuilder html = new StringBuilder();
 
                     //Table start.
-                    html.Append("<table class='freeze-table' border = '1'>");
+                    html.Append("<table id='reportTable' class='freeze-table' border = '1'>");
                     html.Append("<thead>");
                     //html.Append("<table id='reportTable' border = '1'>");
                     //Building the Header row.

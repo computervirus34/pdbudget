@@ -85,11 +85,11 @@ namespace PDBudget
 
                 dt = null;
                 dt = pl.GetNumberParameter("Course Duration (days)");
-                fl.PopulateDDL(dt, ddlDurationDays, "ID", "Name", true, "--Select--", "-1");
+                fl.PopulateDDL(dt, ddlDurationDays, "ID", "Name", true, "--Select--", "-1.00");
 
                 dt = null;
                 dt = pl.GetNumberParameter("CPD Hours");
-                fl.PopulateDDL(dt, ddlCPDHours, "ID", "Name", true, "--Select--", "-1");
+                fl.PopulateDDL(dt, ddlCPDHours, "ID", "Name", true, "--Select--", "-1.00");
 
                 dt = null;
                 dt = pl.GetParameter("Country");
@@ -1010,7 +1010,7 @@ namespace PDBudget
             courseEvent.CPDHours = Convert.ToDecimal(ds.Tables[0].Rows[0]["CPDHours"].ToString());
             courseEvent.CourseLevel = ds.Tables[0].Rows[0]["CourseLevel"].ToString();
             courseEvent.co_host = ds.Tables[0].Rows[0]["co_host"].ToString();
-            courseEvent.CourseDurationDays = Convert.ToDecimal(ds.Tables[0].Rows[0]["CourseDurationDays"].ToString());
+            courseEvent.CourseDurationDays =Convert.ToDecimal(ds.Tables[0].Rows[0]["CourseDurationDays"].ToString());
             courseEvent.coordinator = ds.Tables[0].Rows[0]["coordinator"].ToString();
             courseEvent.Additional_group = ds.Tables[0].Rows[0]["Additional_group"].ToString();
             courseEvent.country = ds.Tables[0].Rows[0]["country"].ToString();

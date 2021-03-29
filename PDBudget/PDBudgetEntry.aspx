@@ -4383,6 +4383,7 @@
         $("#btnPreview").click(function () {
             $("#txtCourseCode").hide();
             $("#ddlCourseCode").show();
+            $("#btnSave").attr("disabled", true);
         });
 
         CalculateTotal();
@@ -5372,10 +5373,10 @@
         $('#txtAptifyID').val(courseInfo.aptifyId);
         $('#ddlStatus').val(courseInfo.courseStatus).change();
         $('#ddlGroup').val(courseInfo.group_).change();
-        $('#ddlCPDHours').val(courseInfo.CPDHours).change();
+        $('#ddlCPDHours').val(parseFloat(courseInfo.CPDHours).toFixed(2)).change();
         $('#ddlCourseLevel').val(courseInfo.CourseLevel).change();
         $('#ddlCoHost').val(courseInfo.co_host).change();
-        $('#ddlDurationDays').val(courseInfo.CourseDurationDays).change();
+        $('#ddlDurationDays').val(parseFloat(courseInfo.CourseDurationDays).toFixed(2)).change();
         $('#txtCoordinator').val(courseInfo.coordinator);
         $('#ddlAdditionalGroup').val(courseInfo.Additional_group).change();
         $('#ddlCountry').val(courseInfo.country).change();
@@ -5456,16 +5457,17 @@
         $('#txtSundryInvoice').val(courseInfo.sundryInvAMount);
         $('#Date7').val(courseInfo.sundryInvDate);
         $('#ddlSundaySuppliesExpCode').val(courseInfo.sundryInvCode).change();
-        fnCalculatePresenterSubTotal();
-        fnCalculateTutorSubTotal();
-        fnCalculateConvenorSubTotal();
-        CalculateTotal();
+        
     }
 
     function setOtherExpenses(otherExpenses) {
         if (otherExpenses.length > 0) {
             otherExpenses.forEach(populateOtherExpence)
         }
+        fnCalculatePresenterSubTotal();
+        fnCalculateTutorSubTotal();
+        fnCalculateConvenorSubTotal();
+        CalculateTotal();
     }
 
     function populateOtherExpence(item, index) {
@@ -5560,6 +5562,10 @@
                     $('#invAmountPresenter').val(setCurrency(item.amount));
                     $('#datePaidPresenter').val(item.datePaid);
                     $('#mealPresenter').val(setCurrency(item.meal));
+
+                    $('#feeSubTotalPresenter').val(setCurrency(item.rate * item.hours_));
+                    $('#expSubTotalPresenter').val(setCurrency(item.accomadation + item.travelEx + item.taxi + item.meal));
+                    $('#totalPresenter').val(setCurrency((item.accomadation + item.travelEx + item.taxi + item.meal) + (item.rate * item.hours_)));
                 } else {
                     var optionsPre = $('#ddlPresenters').html();
                     var optionsPreExpCode = $('#ddlPresenterExpCode').html();
@@ -5659,7 +5665,14 @@
                         + '</td>'
                         + '<td></td>'
                         + '</tr>';
+                    if ((i + 1) % 5 == 0) {
+
+                        $('#feeSubTotalPresenter').val(setCurrency(item.rate * item.hours_));
+                        $('#expSubTotalPresenter').val(setCurrency(item.accomadation + item.travelEx + item.taxi + item.meal));
+                        $('#totalPresenter').val(setCurrency((item.accomadation + item.travelEx + item.taxi + item.meal) + (item.rate * item.hours_)));
+                    }
                     $('#presenterTable').append(presenterDiv); // Adding these controls to Main table class  
+                    
                 }
                 i++;
             } else if (item.rtype == "T") {
