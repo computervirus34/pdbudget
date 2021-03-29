@@ -5542,7 +5542,7 @@
         j = 0;
         k = 0;
         if (resourcePersons.length > 0) {
-            resourcePersons.forEach(populateResourcePerson)
+            resourcePersons.forEach(populateResourcePerson,i)
         }
     }
 
@@ -5550,7 +5550,7 @@
         debugger;
         if (item.resource_person_id > 0)
             if (item.rtype == "P") {
-                if (i == 0) {
+                if (index == 0) {
                     $('#ddlPresenters').val(item.resource_person_id).change();
                     $('#hourPresenter').val(item.hours_);
                     $('#sessionPresenter').val(item.session_);
@@ -5665,16 +5665,15 @@
                         + '</td>'
                         + '<td></td>'
                         + '</tr>';
-                    if ((i + 1) % 5 == 0) {
-
-                        $('#feeSubTotalPresenter').val(setCurrency(item.rate * item.hours_));
-                        $('#expSubTotalPresenter').val(setCurrency(item.accomadation + item.travelEx + item.taxi + item.meal));
-                        $('#totalPresenter').val(setCurrency((item.accomadation + item.travelEx + item.taxi + item.meal) + (item.rate * item.hours_)));
-                    }
                     $('#presenterTable').append(presenterDiv); // Adding these controls to Main table class  
                     
                 }
-                i++;
+                if ((index + 1) % 5 == 0) {
+                    $('#feeSubTotalPresenter').val(setCurrency(item.rate * item.hours_));
+                    $('#expSubTotalPresenter').val(setCurrency(item.accomadation + item.travelEx + item.taxi + item.meal));
+                    $('#totalPresenter').val(setCurrency((item.accomadation + item.travelEx + item.taxi + item.meal) + (item.rate * item.hours_)));
+                }
+                index++;
             } else if (item.rtype == "T") {
                 if (j == 0) {
                     $('#ddlTutors').val(item.resource_person_id).change();
@@ -5688,6 +5687,10 @@
                     $('#invAmountTutor').val(setCurrency(item.amount));
                     $('#datePaidTutor').val(item.datePaid);
                     $('#mealTutor').val(setCurrency(item.meal));
+
+                    $('#feeSubTotalTutor').val(setCurrency(item.rate * item.hours_));
+                    $('#expSubTotalTutor').val(setCurrency(item.accomadation + item.travelEx + item.taxi + item.meal));
+                    $('#totalTutor').val(setCurrency((item.accomadation + item.travelEx + item.taxi + item.meal) + (item.rate * item.hours_)));
 
                 } else {
                     var optionsTutor = $('#ddlTutors').html();
@@ -5809,6 +5812,11 @@
                     $('#invAmountConvenor').val(setCurrency(item.amount));
                     $('#datePaidConvenor').val(item.datePaid);
                     $('#mealConvenor').val(setCurrency(item.meal));
+
+                    $('#feeSubTotalConvenor').val(setCurrency(item.rate * item.hours_));
+                    $('#expSubTotalConvenor').val(setCurrency(item.accomadation + item.travelEx + item.taxi + item.meal));
+                    $('#totalConvenor').val(setCurrency((item.accomadation + item.travelEx + item.taxi + item.meal) + (item.rate * item.hours_)));
+
                 } else {
                     debugger;
                     var optionsConv = $('#ddlConvenors').html();
