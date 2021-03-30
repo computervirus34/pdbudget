@@ -115,8 +115,8 @@
             <asp:UpdatePanel ID="UpdatePanel1" runat="server">
 
                 <ContentTemplate>
-                    <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="false" 
-                        DataKeyNames="id" OnRowEditing="OnRowEditing" OnRowCancelingEdit="OnRowCancelingEdit" PageSize="15" AllowPaging="true" OnPageIndexChanging="OnPaging"
+                    <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="false" OnRowDataBound="OnRowDataBound" 
+                        DataKeyNames="id" OnRowEditing="OnRowEditing" OnRowDeleting="OnRowDeleting" OnRowCancelingEdit="OnRowCancelingEdit" PageSize="15" AllowPaging="true" OnPageIndexChanging="OnPaging"
                         OnRowUpdating="OnRowUpdating" EmptyDataText="No records has been added."
                         Width="1050">
                         <Columns>
@@ -169,7 +169,7 @@
                                     <asp:TextBox ID="ddlType" runat="server" Text='<%# Eval("type") %>' Width="140"></asp:TextBox>
                                 </EditItemTemplate>
                             </asp:TemplateField>
-                            <asp:CommandField ButtonType="Link" ShowEditButton="true" ShowDeleteButton="false"
+                            <asp:CommandField ButtonType="Link" ShowEditButton="true" ShowDeleteButton="true"
                                 ItemStyle-Width="150" />
                         </Columns>
                     </asp:GridView>

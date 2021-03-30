@@ -1,8 +1,10 @@
-﻿using MySql.Data.MySqlClient;
+﻿using ClosedXML.Excel;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Web;
@@ -26,7 +28,7 @@ namespace PDBudget
             }
             else
             {
-                if (!Session["user"].ToString().Equals("admin"))
+                if (!Session["userRole"].ToString().Equals("admin"))
                 {
                     /*MenuItem item = Menu1.FindItem("Parameter");
                     item.Parent.ChildItems.Remove(item);*/
@@ -83,8 +85,8 @@ namespace PDBudget
                         html.Append("<tr>");
                         foreach (DataColumn column in dt.Columns)
                         {
-                            if (i < 15) { html.Append("<td  class='col-id-no-" + i + " scope='row'>"); }
-                            else { html.Append("<td style='min-width:auto;'>"); }
+                            if (i < 15) { html.Append("<td  class='rptTd col-id-no-" + i + " scope='row'>"); }
+                            else { html.Append("<td class='rptTd' style='min-width:auto;'>"); }
                             html.Append(row[column.ColumnName]);
                             html.Append("</td>");
                             i++;
@@ -101,6 +103,45 @@ namespace PDBudget
                 }
             }
         }
+
+
+        protected void ExportExcel(object sender, EventArgs e)
+        {
+            string constr = ConfigurationManager.ConnectionStrings["MysqlConnection"].ConnectionString;
+            using (MySqlConnection con = new MySqlConnection(constr))
+            {
+                using (MySqlCommand cmd = new MySqlCommand("select * from rptfinalreport"))
+                {
+                    using (MySqlDataAdapter sda = new MySqlDataAdapter())
+                    {
+                        cmd.Connection = con;
+                        sda.SelectCommand = cmd;
+                        using (DataTable dt = new DataTable())
+                        {
+                            sda.Fill(dt);
+                            using (XLWorkbook wb = new XLWorkbook())
+                            {
+                                wb.Worksheets.Add(dt, "rptfinalreport");
+
+                                Response.Clear();
+                                Response.Buffer = true;
+                                Response.Charset = "";
+                                Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                                Response.AddHeader("content-disposition", "attachment;filename=FinalReport"+System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")+".xlsx");
+                                using (MemoryStream MyMemoryStream = new MemoryStream())
+                                {
+                                    wb.SaveAs(MyMemoryStream);
+                                    MyMemoryStream.WriteTo(Response.OutputStream);
+                                    Response.Flush();
+                                    Response.End();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
 
         private DataTable GetData()
         {

@@ -80,6 +80,66 @@
                     </table>
                 </div>
             </div>
+            <asp:ScriptManager ID="ScriptManager1" runat="server">
+        </asp:ScriptManager>
+        <div id="dvGrid" style="padding: 10px; width: 600px">
+            <table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse">
+                <tr>
+                    <td style="width: 150px">User ID:<br />
+                        <asp:TextBox ID="txtUserID" runat="server" Width="140" />
+                    </td>
+                    <td style="width: 150px">Password:<br />
+                        <asp:TextBox ID="txtPassword" runat="server" Width="140" />
+                    </td>
+                    <td style="width: 150px">Role Type:<br />
+                         <asp:DropDownList ID="ddlType" runat="server" Width="140">
+                                </asp:DropDownList>
+                    </td>
+                    <td style="width: 150px">
+                        <asp:Button ID="btnAdd" runat="server" Text="Add" OnClick="Insert" />
+                    </td>
+                </tr>
+            </table>
+            <br />
+            <asp:UpdatePanel ID="UpdatePanel1" runat="server">
+
+                <ContentTemplate>
+                    <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="false" OnRowDataBound="OnRowDataBound" 
+                        DataKeyNames="id" OnRowEditing="OnRowEditing" OnRowDeleting="OnRowDeleting" OnRowCancelingEdit="OnRowCancelingEdit" PageSize="15" AllowPaging="true" OnPageIndexChanging="OnPaging"
+                        OnRowUpdating="OnRowUpdating" EmptyDataText="No records has been added."
+                        Width="600">
+                        <Columns>
+                            <asp:TemplateField HeaderText="User ID" ItemStyle-Width="150">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblUserID" runat="server" Text='<%# Eval("userName") %>'></asp:Label>
+                                </ItemTemplate>
+                                <EditItemTemplate>
+                                    <asp:TextBox ID="txtUserID" runat="server" Text='<%# Eval("userName") %>' Width="140"></asp:TextBox>
+                                </EditItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Password" ItemStyle-Width="150">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblPassword" runat="server" Text='XXXXXXXX'></asp:Label>
+                                </ItemTemplate>
+                                <EditItemTemplate>
+                                    <asp:TextBox ID="txtPassword" runat="server" Text='<%# Eval("password") %>' Width="140"></asp:TextBox>
+                                </EditItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Last Name" ItemStyle-Width="150">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblType" runat="server" Text='<%# Eval("userRole") %>'></asp:Label>
+                                </ItemTemplate>
+                                <EditItemTemplate>
+                                    <asp:TextBox ID="txtType" runat="server" Text='<%# Eval("userRole") %>' Width="140"></asp:TextBox>
+                                </EditItemTemplate>
+                            </asp:TemplateField>
+                            <asp:CommandField ButtonType="Link" ShowEditButton="true" ShowDeleteButton="true"
+                                ItemStyle-Width="150" />
+                        </Columns>
+                    </asp:GridView>
+
+                </ContentTemplate>
+            </asp:UpdatePanel>
         </div>
     </form>
 </body>

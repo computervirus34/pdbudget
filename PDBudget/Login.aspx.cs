@@ -26,7 +26,7 @@ namespace PDBudget
         {
             string username = txtUsername.Text.Trim();
             string password = txtPassword.Text.Trim();
-            int userId = 0;
+            string userRole = null;
             string constr = ConfigurationManager.ConnectionStrings["MysqlConnection"].ConnectionString;
             using (MySqlConnection con = new MySqlConnection(constr))
             {
@@ -37,12 +37,12 @@ namespace PDBudget
                     cmd.Parameters.AddWithValue("@p_Password", password);
                     cmd.Connection = con;
                     con.Open();
-                    userId = Convert.ToInt32(cmd.ExecuteScalar());
+                    userRole = Convert.ToString(cmd.ExecuteScalar());
                     con.Close();
                 }
-                switch (userId)
+                switch (userRole)
                 {
-                    case -1:
+                    case "-1":
                         dvMessage.Visible = true;
                         lblMessage.Text = "Username and/or password is incorrect.";
                         break;
@@ -50,12 +50,14 @@ namespace PDBudget
                         if (!string.IsNullOrEmpty(Request.QueryString["ReturnUrl"]))
                         {
                             Session["user"] = txtUsername.Text.Trim();
+                            Session["userRole"] = userRole;
                             FormsAuthentication.SetAuthCookie(username, chkRememberMe.Checked);
                             Response.Redirect(Request.QueryString["ReturnUrl"]);
                         }
                         else
                         {
                             Session["user"] = txtUsername.Text.Trim();
+                            Session["userRole"] = userRole;
                             FormsAuthentication.RedirectFromLoginPage(username, chkRememberMe.Checked);
                         }
                     break;

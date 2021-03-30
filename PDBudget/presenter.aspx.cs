@@ -47,7 +47,7 @@ namespace PDBudget
         private void BindGrid()
         {
             string constr = ConfigurationManager.ConnectionStrings["MysqlConnection"].ConnectionString;
-            string query = "SELECT * FROM resourcepersondetails";
+            string query = "SELECT * FROM resourcepersondetails where isActive='Y'";
             using (MySqlConnection con = new MySqlConnection(constr))
             {
                 using (MySqlDataAdapter sda = new MySqlDataAdapter(query, con))
@@ -149,10 +149,10 @@ namespace PDBudget
         }
 
 
-        /*protected void OnRowDeleting(object sender, GridViewDeleteEventArgs e)
+        protected void OnRowDeleting(object sender, GridViewDeleteEventArgs e)
         {
             int id = Convert.ToInt32(GridView1.DataKeys[e.RowIndex].Values[0]);
-            string query = "DELETE FROM resourcepersondetails WHERE id=@id";
+            string query = "update resourcepersondetails set isActive = 'N'  WHERE id=@id";
             string constr = ConfigurationManager.ConnectionStrings["MysqlConnection"].ConnectionString;
             using (MySqlConnection con = new MySqlConnection(constr))
             {
@@ -177,7 +177,7 @@ namespace PDBudget
                 (e.Row.Cells[6].Controls[2] as LinkButton).Attributes["onclick"] = "return confirm('Do you want to delete this row?');";
             }
         }
-        */
+        
 
 
         protected void OnPaging(object sender, GridViewPageEventArgs e)

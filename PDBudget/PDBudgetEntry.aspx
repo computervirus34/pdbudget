@@ -726,6 +726,9 @@
             #myBtn:hover {
                 background-color: #555;
             }
+        .auto-style1 {
+            height: 29px;
+        }
     </style>
     <link href="Styles/W3.css" rel="stylesheet" />
 </head>
@@ -935,7 +938,7 @@
                             <label>
                                 Suburb/City</label>
                             <div class="form-group">
-                                <asp:DropDownList ID="ddlSuburb" runat="server" CssClass="form-control dropdown">
+                                <asp:DropDownList ID="ddlSuburb" runat="server" CssClass="form-control dropdown" style="left: 0px; top: 4px">
                                 </asp:DropDownList>
                             </div>
                         </div>
@@ -997,9 +1000,9 @@
                         <div class="col-md-12" align="center">
                             <button type="button" id="btnSave" class="btn btn-success">
                                 Save</button>&nbsp;&nbsp;
-                            <button type="button" id="btnReset" class="btn btn-primary" onclick="ClearFields();">
+                            <button type="button" id="btnModify" class="btn btn-primary">
                                 Modify</button>&nbsp;&nbsp;
-                            <button type="button" id="Button3" class="btn btn-success" onclick="AddNewCCCustomerComplain();">
+                            <button type="button" id="btnSubmit" class="btn btn-success">
                                 Submit</button>&nbsp;&nbsp;
                             <button type="button" id="btnPreview" class="btn btn-primary"">
                                 Preview</button>
@@ -1031,14 +1034,14 @@
                     <div class="row clearfix" style="display: none;" id="btnForecast">
                         <div class="col-sm-6">
                             <div class="form-group offset-4">
-                                <button type="button" id="Button2" class="btn btn-primary">
+                                <button type="button" id="btnForecastApprove" class="btn btn-primary">
                                     Forecast Approval
                                 </button>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group offset-1">
-                                <button type="button" id="Button1" class="btn btn-success">
+                                <button type="button" id="btnSignOff" class="btn btn-success">
                                     Final Sign Off
                                 </button>
                             </div>
@@ -2390,26 +2393,44 @@
                                         </td>
                                     </tr>
                                     <tr class="presenterList">
-                                        <td colspan="13"></td>
-                                        <td>
+                                        <td colspan="2" class="auto-style1"></td>
+                                        <td class="auto-style1" style="background-color:#7092BE; color:white;">B.Hours</td>
+                                        <td class="auto-style1" style="background-color:#7092BE; color:white;">B.Rate</td>
+                                        <td class="auto-style1"></td>
+                                        <td colspan="8" class="auto-style1"></td>
+                                        <td class="auto-style1">
                                             <input class="tdInvoiceCss invNumber" id="invNoPresenterAccom" name="invNoPresenterAccom" />
                                         </td>
-                                        <td>
+                                        <td class="auto-style1">
                                             <input onkeypress="return event.charCode === 0 || /\d/.test(String.fromCharCode(event.charCode));"
                                                 class="tdInvoiceCss amount expPresenterCalClass invAmountPresenter" id="invAmountPresenterAccom" name="invAmountPresenterAccom" />
                                         </td>
-                                        <td>
+                                        <td class="auto-style1">
                                             <input type="date" id="datePaidPresenterAccom" name="datePaidPresenterAccom" class="tdInvoiceCss datePaid"
                                                 onkeyup="ResetErrorMsg();" />
                                         </td>
-                                        <td>
+                                        <td class="auto-style1">
                                             <input type="text" id="expCodePresenterAccom" name="expCodePresenterAccom" class="tdInvoiceCss expenseCode"
                                                 onkeyup="ResetErrorMsg();" />
                                         </td>
-                                        <td></td>
+                                        <td class="auto-style1"></td>
                                     </tr>
                                     <tr class="presenterList">
-                                        <td colspan="13"></td>
+                                        <td colspan="2"></td>
+                                        <td>
+                                            <input onkeypress="return event.charCode === 0 || /\d/.test(String.fromCharCode(event.charCode));"
+                                                class="OtherExpenseInput hours_ expPresenterCalClass" id="bHourPresenter" name="bHourPresenter" />
+                                        </td>
+                                        <td>
+                                            <input pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" placeholder="rate"
+                                                class="OtherExpenseInput hours_ expPresenterCalClass" id="bRatePresenter" name="bRatePresenter" />
+                                        </td>
+                                        <td>
+                                            <input onkeypress="return event.charCode === 0 || /\d/.test(String.fromCharCode(event.charCode));"
+                                                id="bFeeSubTotalPresenter" name="bFeeSubTotalPresenter" class="OtherExpenseInput bFeeSubTotalPresenter"
+                                                readonly="readonly" />
+                                        </td>
+                                        <td colspan="8"></td>
                                         <td>
                                             <input class="tdInvoiceCss invNumber" id="invNoPresenterTvExp" name="invNoPresenterTvExp" />
                                         </td>
@@ -2629,7 +2650,11 @@
                                         </td>
                                     </tr>
                                     <tr class="tutorList">
-                                        <td colspan="13"></td>
+                                        <td colspan="2" class="auto-style1"></td>
+                                        <td class="auto-style1" style="background-color:#7092BE; color:white;">B.Hours</td>
+                                        <td class="auto-style1" style="background-color:#7092BE; color:white;">B.Rate</td>
+                                        <td class="auto-style1"></td>
+                                        <td colspan="8" class="auto-style1"></td>
                                         <td>
                                             <input class="tdInvoiceCss txtInvNoTutor invNumber" id="txtInvNoTutorAccom" />
                                         </td>
@@ -2647,7 +2672,21 @@
                                         <td></td>
                                     </tr>
                                     <tr class="tutorList">
-                                        <td colspan="13"></td>
+                                         <td colspan="2"></td>
+                                        <td>
+                                            <input onkeypress="return event.charCode === 0 || /\d/.test(String.fromCharCode(event.charCode));"
+                                                class="OtherExpenseInput hours_ expTutorCalClass" id="bHourTutor" name="bHourTutor" />
+                                        </td>
+                                        <td>
+                                            <input pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" placeholder="rate"
+                                                class="OtherExpenseInput hours_ expPresenterCalClass" id="bRateTutor" name="bRateTutor" />
+                                        </td>
+                                        <td>
+                                            <input onkeypress="return event.charCode === 0 || /\d/.test(String.fromCharCode(event.charCode));"
+                                                id="bFeeSubTotalTutor" name="bFeeSubTotalTutor" class="OtherExpenseInput bFeeSubTotalTutor"
+                                                readonly="readonly" />
+                                        </td>
+                                        <td colspan="8"></td>
                                         <td>
                                             <input class="tdInvoiceCss txtInvNoTutor invNumber" id="txtInvNoTutorTravel" />
                                         </td>
@@ -2912,7 +2951,11 @@
                                         </td>
                                     </tr>
                                     <tr class="convenorList">
-                                        <td colspan="13"></td>
+                                        <td colspan="2" class="auto-style1"></td>
+                                        <td class="auto-style1" style="background-color:#7092BE; color:white;">B.Hours</td>
+                                        <td class="auto-style1" style="background-color:#7092BE; color:white;">B.Rate</td>
+                                        <td class="auto-style1"></td>
+                                        <td colspan="8" class="auto-style1"></td>
                                         <td>
                                             <input class="tdInvoiceCss txtInvNoConvenor invNumber" id="txtInvNoConvenorAccom" />
                                         </td>
@@ -2930,7 +2973,21 @@
                                         <td></td>
                                     </tr>
                                     <tr class="convenorList">
-                                        <td colspan="13"></td>
+                                        <td colspan="2"></td>
+                                        <td>
+                                        	<input onkeypress="return event.charCode === 0 || /\d/.test(String.fromCharCode(event.charCode));"
+                                        		class="OtherExpenseInput hours_ expConvenorCalClass" id="bHourConvenor" name="bHourConvenor" />
+                                        </td>
+                                        <td>
+                                        	<input pattern="^\$\d{1,3}(,\d{3})*(\.\d)?$" data-type="currency" placeholder="rate"
+                                        		class="OtherExpenseInput hours_ expPresenterCalClass" id="bRateConvenor" name="bRateConvenor" />
+                                        </td>
+                                        <td>
+                                        	<input onkeypress="return event.charCode === 0 || /\d/.test(String.fromCharCode(event.charCode));"
+                                        		id="bFeeSubTotalConvenor" name="bFeeSubTotalConvenor" class="OtherExpenseInput bFeeSubTotalConvenor"
+                                        		readonly="readonly" />
+                                        </td>
+                                        <td colspan="8"></td>
                                         <td>
                                             <input class="tdInvoiceCss txtInvNoConvenor invNumber" id="txtInvNoConvenorTravel" />
                                         </td>
@@ -3397,6 +3454,11 @@
                                                 disabled />
                                         </td>
                                         <td colspan="5" style="text-align: center; background-color: White;"></td>
+                                    </tr>
+                                </tbody>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="18"></td>
                                     </tr>
                                 </tbody>
                                 <tbody>
@@ -4328,6 +4390,10 @@
     </form>
     <button onclick="topFunction()" id="myBtn" title="Go to top"><img alt="go up" height="20px" width="20px" src="canvas.png" /></button>
 </body>
+<script type="text/javascript">
+    var user = '<%= Session["user"]%>';
+    var userRole = '<%= Session["userRole"]%>';
+</script>
 <script type="text/javascript" src="scripts/SaveCourse.js"></script>
 <script type="text/javascript">
 
@@ -4388,7 +4454,7 @@
 
         CalculateTotal();
 
-        var user = '<%= Session["user"]%>';
+        
         $("#txtCreatedBy").val(user);
         $("#txtModifiedBy").val(user + "-" + new Date().toLocaleString());
         $("#Text10").val(user + "-" + new Date().toLocaleString());
@@ -4399,7 +4465,7 @@
         $("#Text10").attr("disabled", true);
         $("#txtSignedoffBy").attr("disabled", true);
 
-        if (user != "admin") {
+        if (userRole != "admin") {
             $("#adminControl").hide();
             $("#divForecast").hide();
             $("#btnForecast").hide();
@@ -4560,7 +4626,11 @@
                 '<td><center><button type="button" id="btnDelete" class="deletePresenter btn btn btn-danger btn-xs">Remove</button></center></td>' +
                 '</tr>'
                 + '<tr class="presenterList">'
-                + '<td colspan="13"></td>'
+                + '<td colspan="2" class="auto-style1"></td>'
+                + '<td class="auto-style1" style="background-color:#7092BE; color:white;">B.Hours</td>'
+                + '<td class="auto-style1" style="background-color:#7092BE; color:white;">B.Rate</td>'
+                + '<td class="auto-style1"></td>'
+                + '<td colspan="8" class="auto-style1"></td>'
                 + '<td><input class="tdInvoiceCss invNumber" id="invNoPresenterAccom" name="invNoPresenterAccom" /></td>'
                 + '<td>'
                 + '<input '
@@ -4577,7 +4647,21 @@
                 + '<td></td>'
                 + '</tr>'
                 + '<tr class="presenterList">'
-                + '<td colspan="13"></td>'
+                + '<td colspan="2"></td>'
+                + '<td>'
+                + '	<input onkeypress="return event.charCode === 0 || /\d/.test(String.fromCharCode(event.charCode));"'
+                + '		class="OtherExpenseInput hours_ expPresenterCalClass" id="bHourPresenter" name="bHourPresenter" />'
+                + '</td>'
+                + '<td>'
+                + '	<input pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" placeholder="rate"'
+                + '		class="OtherExpenseInput hours_ expPresenterCalClass" id="bRatePresenter" name="bRatePresenter" />'
+                + '</td>'
+                + '<td>'
+                + '	<input onkeypress="return event.charCode === 0 || /\d/.test(String.fromCharCode(event.charCode));"'
+                + '		id="bFeeSubTotalPresenter" name="bFeeSubTotalPresenter" class="OtherExpenseInput bFeeSubTotalPresenter"'
+                + '		readonly="readonly" />'
+                + '</td>'
+                + '<td colspan="8"></td>'
                 + '<td>'
                 + '<input class="tdInvoiceCss invNumber" id="invNoPresenterTvExp" name="invNoPresenterTvExp" />'
                 + '</td>'
@@ -4653,27 +4737,31 @@
             var optionsTutorExpCode = $(this).parent().parent().parent().find('#ddlTutorExpCode').html();
             var rowCount = $('.tutorList').length + 1;
             var tutorDiv = '<tr class="tutorList">' +
-                '<td><center><select id="ddlTutors" class="form-control" >' + optionsTutor + '</select></center></td>' +
-                '<td><input type="text" id="sessionTutor" class="OtherExpenseInput"/></td>' +
-                '<td><center><input type="text" id="hourTutor" class="OtherExpenseInput expTutorCalClass"/></center></td>' +
-                '<td><center><input type="text" id="rateTutor" class="OtherExpenseInput expTutorCalClass"/></center></td>' +
+                '<td><center><select id="ddlTutors" class="form-control presenterID" >' + optionsTutor + '</select></center></td>' +
+                '<td><input type="text" id="sessionTutor" class="OtherExpenseInput session_"/></td>' +
+                '<td><center><input type="text" id="hourTutor" class="OtherExpenseInput expTutorCalClass hours_"/></center></td>' +
+                '<td><center><input type="text" id="rateTutor" class="OtherExpenseInput expTutorCalClass rate"/></center></td>' +
                 '<td><input type="text" id="feeSubTotalTutor" class="OtherExpenseInput feeSubTotalTutor" disabled/></td>' +
                 '<td></td>' +
-                '<td><center><input type="text" id="accomTutor" class="OtherExpenseInput expTutorCalClass" /></center></td>' +
-                '<td><center><input type="text" id="travelExpTutor" class="OtherExpenseInput expTutorCalClass" /></center></td>' +
-                '<td><center><input type="text" id="mealTutor" class="OtherExpenseInput expTutorCalClass" /></center></td>' +
-                '<td><center><input type="text" id="taxiPetrolTutor" class="OtherExpenseInput expTutorCalClass"/></center></td>' +
+                '<td><center><input type="text" id="accomTutor" class="OtherExpenseInput expTutorCalClass accomadation" /></center></td>' +
+                '<td><center><input type="text" id="travelExpTutor" class="OtherExpenseInput expTutorCalClass travelEx" /></center></td>' +
+                '<td><center><input type="text" id="mealTutor" class="OtherExpenseInput expTutorCalClass meal" /></center></td>' +
+                '<td><center><input type="text" id="taxiPetrolTutor" class="OtherExpenseInput expTutorCalClass taxi"/></center></td>' +
                 '<td><input type="text" id="expSubTotalTutor" class="OtherExpenseInput expSubTotalTutor" disabled/></td>' +
                 '<td><input type="text" id="totalTutor" class="OtherExpenseInput totalTutor" disabled/></td>' +
                 '<td></td>' +
                 '<td><input type="text" id="invNoTutor" class="tdInvoiceCss" /></td>' +
-                '<td><center><input type="text" id="invAmountTutor" class="tdInvoiceCss expTutorCalClass invAmountTutor" /></center></td>' +
+                '<td><center><input type="text" id="invAmountTutor" class="tdInvoiceCss expTutorCalClass invAmountTutor amount" /></center></td>' +
                 '<td><input type="date" id="datePaidTutor" class="tdInvoiceCss" /></td>' +
                 '<td><center><select id="ddlTutorExpCode" class="tdInvoiceCss form-control" >' + optionsTutorExpCode + '</select></center></td>' +
                 '<td><center><button type="button" id="btnDelete" class="deleteTutor btn btn btn-danger btn-xs">Remove</button></center></td>' +
                 '</tr>' +
-                '<tr class="tutorList">' +
-                '<td colspan="13"></td>' +
+                '<tr class="tutorList">' 
+                +'<td colspan="2" class="auto-style1"></td>'
+                + '<td class="auto-style1" style="background-color:#7092BE; color:white;">B.Hours</td>'
+                + '<td class="auto-style1" style="background-color:#7092BE; color:white;">B.Rate</td>'
+                + '<td class="auto-style1"></td>'
+                + '<td colspan="8" class="auto-style1"></td>' +
                 '<td>' +
                 '<input class="tdInvoiceCss txtInvNoTutor invNumber" id="txtInvNoTutorAccom" />' +
                 '</td>' +
@@ -4691,8 +4779,22 @@
                 '<td>' +
                 '</td>' +
                 '</tr>' +
-                '<tr class="tutorList">' +
-                '<td colspan="13"></td>' +
+                '<tr class="tutorList">' 
+                +'<td colspan="2"></td>'
+                + '<td>'
+                + '	<input onkeypress="return event.charCode === 0 || /\d/.test(String.fromCharCode(event.charCode));"'
+                + '		class="OtherExpenseInput hours_ expTutorCalClass" id="bHourTutor" name="bHourTutor" />'
+                + '</td>'
+                + '<td>'
+                + '	<input pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" placeholder="rate"'
+                + '		class="OtherExpenseInput hours_ expTutorCalClass" id="bRateTutor" name="bRateTutor" />'
+                + '</td>'
+                + '<td>'
+                + '	<input onkeypress="return event.charCode === 0 || /\d/.test(String.fromCharCode(event.charCode));"'
+                + '		id="bFeeSubTotalTutor" name="bFeeSubTotalTutor" class="OtherExpenseInput bFeeSubTotalTutor"'
+                + '		readonly="readonly" />'
+                + '</td>'
+                + '<td colspan="8"></td>'+
                 '<td>' +
                 '<input class="tdInvoiceCss txtInvNoTutor invNumber" id="txtInvNoTutorTravel" />' +
                 '</td>' +
@@ -4789,8 +4891,12 @@
                 '<td><center><select id="ddlConvenorExpCode" class="tdInvoiceCss form-control expenseCode" >' + optionsConvExpCode + '</select></center></td>' +
                 '<td><center><button type="button" id="btnDelete" class="deleteConvenor btn btn btn-danger btn-xs">Remove</button></center></td>' +
                 '</tr>' +
-                '<tr class="convenorList">' +
-                '<td colspan="13"></td>' +
+                '<tr class="convenorList">' 
+                +'<td colspan="2" class="auto-style1"></td>'
+                + '<td class="auto-style1" style="background-color:#7092BE; color:white;">B.Hours</td>'
+                + '<td class="auto-style1" style="background-color:#7092BE; color:white;">B.Rate</td>'
+                + '<td class="auto-style1"></td>'
+                + '<td colspan="8" class="auto-style1"></td>'+
                 '<td>' +
                 '<input class="tdInvoiceCss txtInvNoConvenor invNumber" id="txtInvNoConvenorAccom" />' +
                 '</td>' +
@@ -4808,8 +4914,22 @@
                 '<td>' +
                 '</td>' +
                 '</tr>' +
-                '<tr class="convenorList">' +
-                '<td colspan="13"></td>' +
+                '<tr class="convenorList">'
+                + '<td colspan="2"></td>'
+                + '<td>'
+                + '	<input onkeypress="return event.charCode === 0 || /\d/.test(String.fromCharCode(event.charCode));"'
+                + '		class="OtherExpenseInput hours_ expConvenorCalClass" id="bHourConvenor" name="bHourConvenor" />'
+                + '</td>'
+                + '<td>'
+                + '	<input pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" placeholder="rate"'
+                + '		class="OtherExpenseInput hours_ expConvenorCalClass" id="bRateConvenor" name="bRateConvenor" />'
+                + '</td>'
+                + '<td>'
+                + '	<input onkeypress="return event.charCode === 0 || /\d/.test(String.fromCharCode(event.charCode));"'
+                + '		id="bFeeSubTotalConvenor" name="bFeeSubTotalConvenor" class="OtherExpenseInput bFeeSubTotalConvenor"'
+                + '		readonly="readonly" />'
+                + '</td>'
+                + '<td colspan="8"></td>'+
                 '<td>' +
                 '<input class="tdInvoiceCss txtInvNoConvenor invNumber" id="txtInvNoConvenorTravel" />' +
                 '</td>' +
@@ -5362,6 +5482,7 @@
 
     ///Rony
 
+
     var i = 0;
     var j = 0;
     var k = 0;
@@ -5388,6 +5509,12 @@
         $('#txtCourseDate').val(courseInfo.courseDate);
         $('#txtIterationBeginDate').val(courseInfo.StartDate);
         $('#txtIterationEndDate').val(courseInfo.EndDate);
+
+        $('#txtCreatedBy').val(courseInfo.cretedby);
+        $('#txtModifiedBy').val(courseInfo.modifiedby + '-' + courseInfo.modifiedon);
+        $('#Text10').val(courseInfo.forecastapprovedby + '-' + courseInfo.forecastapprovedate);
+        $('#txtSignedoffBy').val(courseInfo.signedoffby + '-' + courseInfo.signedoffon);
+
         $('#txtTotalNumberOfPresentersOnly').val(courseInfo.NoPresenters);
         $('#txtTotalNoOfConsultantsInput').val(courseInfo.totalConsultantIncPresenter);
         $('#txtNofOfFreePlaces').val(courseInfo.numberofFreePlace);
@@ -5457,17 +5584,17 @@
         $('#txtSundryInvoice').val(courseInfo.sundryInvAMount);
         $('#Date7').val(courseInfo.sundryInvDate);
         $('#ddlSundaySuppliesExpCode').val(courseInfo.sundryInvCode).change();
-        
+
     }
 
     function setOtherExpenses(otherExpenses) {
         if (otherExpenses.length > 0) {
             otherExpenses.forEach(populateOtherExpence)
         }
-        fnCalculatePresenterSubTotal();
-        fnCalculateTutorSubTotal();
-        fnCalculateConvenorSubTotal();
-        CalculateTotal();
+        //fnCalculatePresenterSubTotal();
+        //fnCalculateTutorSubTotal();
+        //fnCalculateConvenorSubTotal();
+        //CalculateTotal();
     }
 
     function populateOtherExpence(item, index) {
@@ -5534,6 +5661,7 @@
                 $('#otherExpenseTable1').find('tbody').append(convenorDiv1);
             }
             $("#otherExpenseTable1").show();
+
         }
     }
 
@@ -5542,15 +5670,25 @@
         j = 0;
         k = 0;
         if (resourcePersons.length > 0) {
-            resourcePersons.forEach(populateResourcePerson,i)
+            resourcePersons.forEach(populateResourcePerson)
         }
     }
 
     function populateResourcePerson(item, index) {
         debugger;
-        if (item.resource_person_id > 0)
+        if (item.resource_person_id > 0) {
+
+
+
+            var feeSubTotal = setCurrency(item.rate * item.hours_);
+            var expSubTotal = setCurrency(item.accomadation + item.travelEx + item.taxi + item.meal);
+            var total = setCurrency((item.accomadation + item.travelEx + item.taxi + item.meal) + (item.rate * item.hours_));
+            var invNo = item.invNumber;
+            var expCode = item.expenseCode;
+
             if (item.rtype == "P") {
-                if (index == 0) {
+
+                if (i == 0) {
                     $('#ddlPresenters').val(item.resource_person_id).change();
                     $('#hourPresenter').val(item.hours_);
                     $('#sessionPresenter').val(item.session_);
@@ -5563,66 +5701,105 @@
                     $('#datePaidPresenter').val(item.datePaid);
                     $('#mealPresenter').val(setCurrency(item.meal));
 
-                    $('#feeSubTotalPresenter').val(setCurrency(item.rate * item.hours_));
-                    $('#expSubTotalPresenter').val(setCurrency(item.accomadation + item.travelEx + item.taxi + item.meal));
-                    $('#totalPresenter').val(setCurrency((item.accomadation + item.travelEx + item.taxi + item.meal) + (item.rate * item.hours_)));
+                    $('#invAmountPresenterAccom').val(setCurrency(item.accomadation));
+                    $('#invAmountPresenterTravel').val(setCurrency(item.travelEx));
+                    $('#invAmountPresenterMeal').val(setCurrency(item.meal));
+                    $('#invAmountPresenterTaxi').val(setCurrency(item.taxi));
+
+                    $('#invNoPresenterAccom').val(invNo);
+                    $('#invNoPresenterTvExp').val(invNo);
+                    $('#invNoPresenterMeal').val(invNo);
+                    $('#invNoPresenterTaxi').val(invNo);
+
+                    $('#expCodePresenterAccom').val(expCode);
+                    $('#expCodePresenterTvExp').val(expCode);
+                    $('#expCodePresenterMeal').val(expCode);
+                    $('#expCodePresenterTaxi').val(expCode);
+
+                    $('#invNoPresenter').val(invNo);
+                    $('#feeSubTotalPresenter').val(feeSubTotal);
+                    $('#feeSubTotalFinalPresenter').val(feeSubTotal);
+                    $('#expSubTotalPresenter').val(expSubTotal);
+                    $('#expSubTotalFinalPresenter').val(expSubTotal);
+                    $('#invSubTotalAmountPresenter').val(total);
+                    $('#totalPresenter').val(total);
+                    $('#totalFinalPresenter').val(total);
                 } else {
                     var optionsPre = $('#ddlPresenters').html();
                     var optionsPreExpCode = $('#ddlPresenterExpCode').html();
                     //optionsPreExpCode.replace();
                     var presenterDiv = '<tr class="presenterList">' +
-                        '<td><center><select id="ddlPresenters" class="form-control presenterID" value="' + item.resource_person_id + '" >' + optionsPre + '</select></center></td>' +
+                        '<td><center><select id="ddlPresenters" class="form-control presenterID presenter' + index + '" >' + optionsPre + '</select></center></td>' +
                         '<td><input type="text" id="sessionPresenter" value="' + item.session_ + '" class="OtherExpenseInput session_"/></td>' +
                         '<td><center><input type="text" id="hourPresenter" value="' + item.hours_ + '"  class="OtherExpenseInput expPresenterCalClass hours_"/></center></td>' +
                         '<td><center><input type="text" id="ratePresenter" value="' + setCurrency(item.rate) + '"class="OtherExpenseInput expPresenterCalClass rate"/></center></td>' +
-                        '<td><input type="text" id="feeSubTotalPresenter" class="OtherExpenseInput feeSubTotalPresenter" disabled/></td>' +
+                        '<td><input type="text" id="feeSubTotalPresenter "value="' + feeSubTotal + '" class="OtherExpenseInput feeSubTotalPresenter" disabled/></td>' +
                         '<td></td>' +
                         '<td><center><input type="text" id="accomPresenter" value="' + setCurrency(item.accomadation) + '" class="OtherExpenseInput expPresenterCalClass accomadation" /></center></td>' +
                         '<td><center><input type="text" id="travelExpPresenter" value="' + setCurrency(item.travelEx) + '" class="OtherExpenseInput expPresenterCalClass travelEx" /></center></td>' +
                         '<td><center><input type="text" id="mealPresenter" value="' + setCurrency(item.meal) + '" class="OtherExpenseInput expPresenterCalClass meal" /></center></td>' +
                         '<td><center><input type="text" id="taxiPetrolPresenter" value="' + setCurrency(item.taxi) + '" class="OtherExpenseInput expPresenterCalClass taxi"/></center></td>' +
-                        '<td><input type="text" id="expSubTotalPresenter" class="OtherExpenseInput expSubTotalPresenter" disabled/></td>' +
-                        '<td><input type="text" id="totalPresenter" class="OtherExpenseInput totalPresenter" disabled/></td>' +
+                        '<td><input type="text" id="expSubTotalPresenter" value="' + expSubTotal + '" class="OtherExpenseInput expSubTotalPresenter" disabled/></td>' +
+                        '<td><input type="text" id="totalPresenter" value="' + total + '" class="OtherExpenseInput totalPresenter" disabled/></td>' +
                         '<td></td>' +
                         '<td><input type="text" id="invNoPresenter" value="' + item.invNumber + '" class="tdInvoiceCss invNumber" /></td>' +
-                        '<td><center><input type="text" id="invAmountPresenter"value="' + setCurrency(item.amount) + '" class="tdInvoiceCss expPresenterCalClass invAmountPresenter amount" /></center></td>' +
+                        '<td><center><input type="text" id="invAmountPresenter "value="' + setCurrency(item.amount) + '" class="tdInvoiceCss expPresenterCalClass invAmountPresenter amount" /></center></td>' +
                         '<td><input type="date" id="datePaidPresenter" value="' + item.datePaid + '" class="tdInvoiceCss datePaid" /></td>' +
 
-                        '<td><center><select id="ddlPresenterExpCode" class="tdInvoiceCss form-control expenseCode" >' + setCurrency(optionsPreExpCode) + '</select></center></td>' +
+                        '<td><center><select id="ddlPresenterExpCode" class="tdInvoiceCss form-control expenseCode" >' + optionsPreExpCode + '</select></center></td>' +
                         '<td><center><button type="button" id="btnDelete" class="deletePresenter btn btn btn-danger btn-xs">Remove</button></center></td>' +
                         '</tr>'
                         + '<tr class="presenterList">'
-                        + '<td colspan="13"></td>'
-                        + '<td><input class="tdInvoiceCss invNumber" id="invNoPresenterAccom" name="invNoPresenterAccom" /></td>'
+                        + '<td colspan="2" class="auto-style1"></td>'
+                        + '<td class="auto-style1" style="background-color:#7092BE; color:white;">B.Hours</td>'
+                        + '<td class="auto-style1" style="background-color:#7092BE; color:white;">B.Rate</td>'
+                        + '<td class="auto-style1"></td>'
+                        + '<td colspan="8" class="auto-style1"></td>'
+
+                        + '<td><input class="tdInvoiceCss invNumber" id="invNoPresenterAccom" name="invNoPresenterAccom" value="' + item.invNumber + '"/></td>'
                         + '<td>'
                         + '<input '
-                        + 'class="tdInvoiceCss expPresenterCalClass invAmountPresenter amount" id="invAmountPresenterAccom" name="invAmountPresenterAccom"/>'
+                        + 'class="tdInvoiceCss expPresenterCalClass invAmountPresenter amount" id="invAmountPresenterAccom" name="invAmountPresenterAccom" value="' + setCurrency(item.accomadation) + '" />'
                         + '</td>'
                         + '<td>'
                         + '<input type="date" id="datePaidPresenterAccom" name="datePaidPresenterAccom" class="tdInvoiceCss datePaid"'
                         + 'onkeyup="ResetErrorMsg();" />'
                         + '</td>'
                         + '<td>'
-                        + '<input type="text" id="expCodePresenterAccom" name="expCodePresenterAccom" class="tdInvoiceCss expenseCode"'
+                        + '<input type="text" id="expCodePresenterAccom" value="' + expCode + '" name="expCodePresenterAccom" class="tdInvoiceCss expenseCode"'
                         + 'onkeyup="ResetErrorMsg();" />'
                         + '</td>'
                         + '<td></td>'
                         + '</tr>'
                         + '<tr class="presenterList">'
-                        + '<td colspan="13"></td>'
+                        + '<td colspan="2"></td>'
                         + '<td>'
-                        + '<input class="tdInvoiceCss invNumber" id="invNoPresenterTvExp" name="invNoPresenterTvExp" />'
+                        + '	<input onkeypress="return event.charCode === 0 || /\d/.test(String.fromCharCode(event.charCode));"'
+                        + '		class="OtherExpenseInput hours_ expPresenterCalClass" id="bHourPresenter" name="bHourPresenter" />'
+                        + '</td>'
+                        + '<td>'
+                        + '	<input pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" placeholder="rate"'
+                        + '		class="OtherExpenseInput hours_ expPresenterCalClass" id="bRatePresenter" name="bRatePresenter" />'
+                        + '</td>'
+                        + '<td>'
+                        + '	<input onkeypress="return event.charCode === 0 || /\d/.test(String.fromCharCode(event.charCode));"'
+                        + '		id="bFeeSubTotalPresenter" name="bFeeSubTotalPresenter" class="OtherExpenseInput bFeeSubTotalPresenter"'
+                        + '		readonly="readonly" />'
+                        + '</td>'
+                        + '<td colspan="8"></td>'
+                        + '<td>'
+                        + '<input class="tdInvoiceCss invNumber" id="invNoPresenterTvExp" name="invNoPresenterTvExp" value="' + item.invNumber + '" />'
                         + '</td>'
                         + '<td>'
                         + '<input '
-                        + 'class="tdInvoiceCss expPresenterCalClass invAmountPresenter amount" id="invAmountPresenterTravel" name="invAmountPresenterTravel"/>'
+                        + 'class="tdInvoiceCss expPresenterCalClass invAmountPresenter amount" id="invAmountPresenterTravel" name="invAmountPresenterTravel" value="' + setCurrency(item.travelEx) + '" />'
                         + '</td>'
                         + '<td>'
                         + '<input type="date" id="datePaidPresenterTvExp" name="datePaidPresenterTvExp" class="tdInvoiceCss datePaid"'
                         + 'onkeyup="ResetErrorMsg();" />'
                         + '</td>'
                         + '<td>'
-                        + '<input type="text" id="expCodePresenterTvExp" name="expCodePresenterTvExp" class="tdInvoiceCss expenseCode"'
+                        + '<input type="text" id="expCodePresenterTvExp"  value="' + expCode + '" name="expCodePresenterTvExp" class="tdInvoiceCss expenseCode"'
                         + 'onkeyup="ResetErrorMsg();" />'
                         + '</td>'
                         + '<td></td>'
@@ -5630,18 +5807,18 @@
                         + '<tr class="presenterList">'
                         + '<td colspan="13"></td>'
                         + '<td>'
-                        + '<input class="tdInvoiceCss invNumber" id="invNoPresenterMeal" name="invNoPresenterMeal" />'
+                        + '<input class="tdInvoiceCss invNumber" id="invNoPresenterMeal" name="invNoPresenterMeal"  value="' + item.invNumber + '"/>'
                         + '</td>'
                         + '<td>'
                         + '<input '
-                        + 'class="tdInvoiceCss expPresenterCalClass invAmountPresenter amount" id="invAmountPresenterMeal" name="invAmountPresenterMeal"/>'
+                        + 'class="tdInvoiceCss expPresenterCalClass invAmountPresenter amount" id="invAmountPresenterMeal" name="invAmountPresenterMeal" value="' + setCurrency(item.meal) + '"/>'
                         + '</td>'
                         + '<td>'
                         + '<input type="date" id="datePaidPresenterMeal" name="datePaidPresenterMeal" class="tdInvoiceCss datePaid"'
                         + 'onkeyup="ResetErrorMsg();" />'
                         + '</td>'
                         + '<td>'
-                        + '<input type="text" id="expCodePresenterMeal" name="expCodePresenterMeal" class="tdInvoiceCss expenseCode"'
+                        + '<input type="text" id="expCodePresenterMeal"  value="' + expCode + '" name="expCodePresenterMeal" class="tdInvoiceCss expenseCode"'
                         + 'onkeyup="ResetErrorMsg();" />'
                         + '</td>'
                         + '<td></td>'
@@ -5649,31 +5826,35 @@
                         + '<tr class="presenterList">'
                         + '<td colspan="13"></td>'
                         + '<td>'
-                        + '<input class="tdInvoiceCss invNumber" id="invNoPresenterTaxi" name="invNoPresenterTaxi" />'
+                        + '<input class="tdInvoiceCss invNumber" id="invNoPresenterTaxi" name="invNoPresenterTaxi" value="' + item.invNumber + '"/>'
                         + '</td>'
                         + '<td>'
                         + '<input '
-                        + 'class="tdInvoiceCss expPresenterCalClass invAmountPresenter amount" id="invAmountPresenterTaxi" name="invAmountPresenterTaxi"/>'
+                        + 'class="tdInvoiceCss expPresenterCalClass invAmountPresenter amount" id="invAmountPresenterTaxi" name="invAmountPresenterTaxi" value="' + setCurrency(item.taxi) + '"/>'
                         + '</td>'
                         + '<td>'
                         + '<input type="date" id="datePaidPresenterTaxi" name="datePaidPresenterTaxi" class="tdInvoiceCss datePaid"'
                         + 'onkeyup="ResetErrorMsg();" />'
                         + '</td>'
                         + '<td>'
-                        + '<input type="text" id="expCodePresenterTaxi" name="expCodePresenterTaxi" class="tdInvoiceCss expenseCode"'
+                        + '<input type="text" id="expCodePresenterTaxi"  value="' + expCode + '" name="expCodePresenterTaxi" class="tdInvoiceCss expenseCode"'
                         + 'onkeyup="ResetErrorMsg();" />'
                         + '</td>'
                         + '<td></td>'
                         + '</tr>';
                     $('#presenterTable').append(presenterDiv); // Adding these controls to Main table class  
-                    
+                    $('.presenter' + index + '').val(item.resource_person_id).change();
+                    fnCalculatePresenterSubTotal();
+
+
                 }
-                if ((index + 1) % 5 == 0) {
-                    $('#feeSubTotalPresenter').val(setCurrency(item.rate * item.hours_));
-                    $('#expSubTotalPresenter').val(setCurrency(item.accomadation + item.travelEx + item.taxi + item.meal));
-                    $('#totalPresenter').val(setCurrency((item.accomadation + item.travelEx + item.taxi + item.meal) + (item.rate * item.hours_)));
-                }
-                index++;
+                i++;
+                //if ((index + 1) % 5 == 0) {
+                //	$('#feeSubTotalPresenter').val(setCurrency(item.rate * item.hours_));
+                //	$('#expSubTotalPresenter').val(setCurrency(item.accomadation + item.travelEx + item.taxi + item.meal));
+                //	$('#totalPresenter').val(setCurrency((item.accomadation + item.travelEx + item.taxi + item.meal) + (item.rate * item.hours_)));
+                //}
+                //index++;
             } else if (item.rtype == "T") {
                 if (j == 0) {
                     $('#ddlTutors').val(item.resource_person_id).change();
@@ -5683,73 +5864,112 @@
                     $('#accomTutor').val(setCurrency(item.accomadation));
                     $('#travelExpTutor').val(setCurrency(item.travelEx));
                     $('#taxiPetrolTutor').val(setCurrency(item.taxi));
-                    $('#invNoTutor').val(setCurrency(item.invNumber));
+                    $('#invTutor').val(setCurrency(item.invNumber));
                     $('#invAmountTutor').val(setCurrency(item.amount));
                     $('#datePaidTutor').val(item.datePaid);
                     $('#mealTutor').val(setCurrency(item.meal));
 
-                    $('#feeSubTotalTutor').val(setCurrency(item.rate * item.hours_));
-                    $('#expSubTotalTutor').val(setCurrency(item.accomadation + item.travelEx + item.taxi + item.meal));
-                    $('#totalTutor').val(setCurrency((item.accomadation + item.travelEx + item.taxi + item.meal) + (item.rate * item.hours_)));
+                    $('#invAmountTutorAccom').val(setCurrency(item.accomadation));
+                    $('#invAmountTutorTravel').val(setCurrency(item.travelEx));
+                    $('#invAmountTutorMeal').val(setCurrency(item.meal));
+                    $('#invAmountTutorTaxi').val(setCurrency(item.taxi));
+
+
+                    $('#txtInvNoTutorAccom').val(invNo);
+                    $('#txtInvNoTutorTravel').val(invNo);
+                    $('#txtInvNoTutorMeal').val(invNo);
+                    $('#txtInvNoTutorTaxi').val(invNo);
+
+                    $('#expCodeTutorAccom').val(expCode);
+                    $('#expCodeTutorTvExp').val(expCode);
+                    $('#expCodeTutorMeal').val(expCode);
+                    $('#expCodeTutorTaxi').val(expCode);
+
+                    $('#invTutor').val(invNo);
+                    $('#feeSubTotalTutor').val(feeSubTotal);
+                    $('#feeSubTotalFinalTutor').val(feeSubTotal);
+                    $('#expSubTotalTutor').val(expSubTotal);
+                    $('#expSubTotalFinalTutor').val(expSubTotal);
+                    $('#invSubTotalAmountTutor').val(total);
+                    $('#totalTutor').val(total);
+                    $('#totalFinalTutor').val(total);
 
                 } else {
                     var optionsTutor = $('#ddlTutors').html();
                     var optionsTutorExpCode = $('#ddlTutorExpCode').html();
                     var tutorDiv = '<tr class="tutorList">' +
-                        '<td><center><select id="ddlTutors" class="form-control" value="' + item.resource_person_id + '" >' + optionsTutor + '</select></center></td>' +
-                        '<td><input type="text" id="sessionTutor" value="' + item.session_ + '" class="OtherExpenseInput"/></td>' +
-                        '<td><center><input type="text" id="hourTutor" value="' + item.hours_ + '" class="OtherExpenseInput expTutorCalClass"/></center></td>' +
-                        '<td><center><input type="text" id="rateTutor" value="' + setCurrency(item.rate) + '" class="OtherExpenseInput expTutorCalClass"/></center></td>' +
-                        '<td><input type="text" id="feeSubTotalTutor" class="OtherExpenseInput feeSubTotalTutor" disabled/></td>' +
+                        '<td><center><select id="ddlTutors" class="form-control presenterID tutor' + index + '" >' + optionsTutor + '</select></center></td>' +
+                        '<td><input type="text" id="sessionTutor" value="' + item.session_ + '" class="OtherExpenseInput session_"/></td>' +
+                        '<td><center><input type="text" id="hourTutor" value="' + item.hours_ + '" class="OtherExpenseInput hours_ expTutorCalClass"/></center></td>' +
+                        '<td><center><input type="text" id="rateTutor" value="' + setCurrency(item.rate) + '" class="OtherExpenseInput rate expTutorCalClass"/></center></td>' +
+                        '<td><input type="text" id="feeSubTotalTutor" value="' + feeSubTotal + '" class="OtherExpenseInput feeSubTotalTutor" disabled/></td>' +
                         '<td></td>' +
-                        '<td><center><input type="text" id="accomTutor" value="' + setCurrency(item.accomadation) + '" class="OtherExpenseInput expTutorCalClass" /></center></td>' +
-                        '<td><center><input type="text" id="travelExpTutor" value="' + setCurrency(item.travelEx) + '"  class="OtherExpenseInput expTutorCalClass" /></center></td>' +
-                        '<td><center><input type="text" id="mealTutor" value="' + setCurrency(item.meal) + '"  class="OtherExpenseInput expTutorCalClass" /></center></td>' +
-                        '<td><center><input type="text" id="taxiPetrolTutor" value="' + setCurrency(item.taxi) + '"  class="OtherExpenseInput expTutorCalClass"/></center></td>' +
-                        '<td><input type="text" id="expSubTotalTutor" class="OtherExpenseInput expSubTotalTutor" disabled/></td>' +
-                        '<td><input type="text" id="totalTutor" class="OtherExpenseInput totalTutor" disabled/></td>' +
+                        '<td><center><input type="text" id="accomTutor" value="' + setCurrency(item.accomadation) + '" class="OtherExpenseInput expTutorCalClass accomadation" /></center></td>' +
+                        '<td><center><input type="text" id="travelExpTutor" value="' + setCurrency(item.travelEx) + '"  class="OtherExpenseInput expTutorCalClass travelEx" /></center></td>' +
+                        '<td><center><input type="text" id="mealTutor" value="' + setCurrency(item.meal) + '"  class="OtherExpenseInput expTutorCalClass meal" /></center></td>' +
+                        '<td><center><input type="text" id="taxiPetrolTutor" value="' + setCurrency(item.taxi) + '"  class="OtherExpenseInput expTutorCalClass taxi"/></center></td>' +
+                        '<td><input type="text" id="expSubTotalTutor" value="' + expSubTotal + '" class="OtherExpenseInput expSubTotalTutor" disabled/></td>' +
+                        '<td><input type="text" id="totalTutor" value="' + total + '" class="OtherExpenseInput totalTutor" disabled/></td>' +
                         '<td></td>' +
-                        '<td><input type="text" id="invNoTutor"  value="' + item.invNumber + '" class="tdInvoiceCss" /></td>' +
-                        '<td><center><input type="text" id="invAmountTutor" value="' + setCurrency(item.amount) + '"  class="tdInvoiceCss expTutorCalClass invAmountTutor" /></center></td>' +
-                        '<td><input type="date" id="datePaidTutor" value="' + item.datePaid + '"  class="tdInvoiceCss" /></td>' +
-                        '<td><center><select id="ddlTutorExpCode" class="tdInvoiceCss form-control" >' + optionsTutorExpCode + '</select></center></td>' +
+                        '<td><input type="text" id="invNoTutor"  value="' + item.invNumber + '" class="tdInvoiceCss invNumber" /></td>' +
+                        '<td><center><input type="text" id="invAmountTutor" value="' + setCurrency(item.amount) + '"  class="tdInvoiceCss expTutorCalClass amount invAmountTutor" /></center></td>' +
+                        '<td><input type="date" id="datePaidTutor" value="' + item.datePaid + '"  class="tdInvoiceCss datePaid" /></td>' +
+                        '<td><center><select id="ddlTutorExpCode" class="tdInvoiceCss form-control expenseCode" >' + optionsTutorExpCode + '</select></center></td>' +
                         '<td><center><button type="button" id="btnDelete" class="deleteTutor btn btn btn-danger btn-xs">Remove</button></center></td>' +
                         '</tr>' +
                         '<tr class="tutorList">' +
-                        '<td colspan="13"></td>' +
+                        +'<td colspan="2" class="auto-style1"></td>'
+                        + '<td class="auto-style1" style="background-color:#7092BE; color:white;">B.Hours</td>'
+                        + '<td class="auto-style1" style="background-color:#7092BE; color:white;">B.Rate</td>'
+                        + '<td class="auto-style1"></td>'
+                        + '<td colspan="8" class="auto-style1"></td>' +
                         '<td>' +
-                        '<input class="tdInvoiceCss txtInvNoTutor invNumber" id="txtInvNoTutorAccom" />' +
+                        '<input class="tdInvoiceCss txtInvNoTutor invNumber" id="txtInvNoTutorAccom" value="' + item.invNumber + '"/>' +
                         '</td>' +
                         '<td>' +
                         '<input' +
-                        '	class="tdInvoiceCss expTutorCalClass invAmountTutor amount" id="invAmountTutorAccom" name="invAmountTutor" />' +
+                        '	class="tdInvoiceCss expTutorCalClass invAmountTutor amount" id="invAmountTutorAccom" name="invAmountTutor"  value="' + setCurrency(item.accomadation) + '" />' +
                         '</td>' +
                         '<td>' +
                         '<input type="date" id="dateInvoiceTutorAccom" class="tdInvoiceCss dateInvoiceTutor datePaid" />' +
                         '</td>' +
                         '<td>' +
-                        '<input type="text" id="expCodeTutorAccom" name="expCodePresenterAccom" class="tdInvoiceCss expCodePresenter expenseCode"' +
+                        '<input type="text" id="expCodeTutorAccom" value="' + expCode + '"  name="expCodePresenterAccom" class="tdInvoiceCss expCodePresenter expenseCode"' +
                         'onkeyup = "ResetErrorMsg();" /> ' +
                         '</td>' +
                         '<td>' +
                         '</td>' +
                         '</tr>' +
-                        '<tr class="tutorList">' +
-                        '<td colspan="13"></td>' +
+                        '<tr class="tutorList">' 
+                        +'<td colspan="2"></td>'
+                        + '<td>'
+                        + '	<input onkeypress="return event.charCode === 0 || /\d/.test(String.fromCharCode(event.charCode));"'
+                        + '		class="OtherExpenseInput hours_ expTutorCalClass" id="bHourTutor" name="bHourTutor" />'
+                        + '</td>'
+                        + '<td>'
+                        + '	<input pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" placeholder="rate"'
+                        + '		class="OtherExpenseInput hours_ expTutorCalClass" id="bRateTutor" name="bRateTutor" />'
+                        + '</td>'
+                        + '<td>'
+                        + '	<input onkeypress="return event.charCode === 0 || /\d/.test(String.fromCharCode(event.charCode));"'
+                        + '		id="bFeeSubTotalTutor" name="bFeeSubTotalTutor" class="OtherExpenseInput bFeeSubTotalTutor"'
+                        + '		readonly="readonly" />'
+                        + '</td>'
+                        + '<td colspan="8"></td>'+
                         '<td>' +
-                        '<input class="tdInvoiceCss txtInvNoTutor invNumber" id="txtInvNoTutorTravel" />' +
+                        '<input class="tdInvoiceCss txtInvNoTutor invNumber" id="txtInvNoTutorTravel"  value="' + item.invNumber + '"/>' +
                         '</td>' +
                         '<td>' +
                         '<input' +
                         '	class="tdInvoiceCss expTutorCalClass invAmountTutor amount" id="invAmountTutorTravel" name="invAmountTutorTravel"' +
-                        '	min="1" />' +
+                        '	min="1"value="' + setCurrency(item.amount) + '" />' +
                         '</td>' +
                         '<td>' +
                         '<input type="date" id="dateInvoiceTutorTravel" class="tdInvoiceCss dateInvoiceTutor datePaid" />' +
                         '</td>' +
                         '<td>' +
-                        '<input type="text" id="expCodeTutorTravel" name="expCodeTutorTravel" class="tdInvoiceCss expCodePresenter expenseCode"' +
-                        'onkeyup = "ResetErrorMsg();" /> ' +
+                        '<input type="text" id="expCodeTutorTravel" name="expCodeTutorTravel" value="' + expCode + '" class="tdInvoiceCss expCodePresenter expenseCode"' +
+                        'onkeyup = "ResetErrorMsg();"  /> ' +
                         '</td>' +
                         '<td>' +
                         '</td>' +
@@ -5757,18 +5977,18 @@
                         '<tr class="tutorList">' +
                         '<td colspan="13"></td>' +
                         '<td>' +
-                        '<input class="tdInvoiceCss txtInvNoTutor invNumber" id="txtInvNoTutorMeal" />' +
+                        '<input class="tdInvoiceCss txtInvNoTutor invNumber" id="txtInvNoTutorMeal" value="' + item.invNumber + '" />' +
                         '</td>' +
                         '<td>' +
                         '<input' +
-                        '	class="tdInvoiceCss expTutorCalClass invAmountTutor amount" id="invAmountTutorMeal" name="invAmountTutorMeal"/>' +
+                        '	class="tdInvoiceCss expTutorCalClass invAmountTutor amount" id="invAmountTutorMeal" name="invAmountTutorMeal" value="' + setCurrency(item.meal) + '"/>' +
                         '</td>' +
                         '<td>' +
                         '<input type="date" id="dateInvoiceTutorMeal" class="tdInvoiceCss dateInvoiceTutor datePaid" />' +
                         '</td>' +
                         '<td>' +
                         '<input type="text" id="expCodeTutorMeal" name="expCodePresenterAccom" class="tdInvoiceCss expCodePresenter expenseCode"' +
-                        'onkeyup = "ResetErrorMsg();" /> ' +
+                        'onkeyup = "ResetErrorMsg();"  value="' + expCode + '" /> ' +
                         '</td>' +
                         '<td>' +
                         '</td>' +
@@ -5776,28 +5996,31 @@
                         '<tr class="tutorList">' +
                         '<td colspan="13"></td>' +
                         '<td>' +
-                        '<input class="tdInvoiceCss txtInvNoTutor invNumber" id="txtInvNoTutorTaxi" />' +
+                        '<input class="tdInvoiceCss txtInvNoTutor invNumber" id="txtInvNoTutorTaxi" value="' + item.invNumber + '"/>' +
                         '</td>' +
                         '<td>' +
                         '<input' +
                         '	class="tdInvoiceCss expTutorCalClass invAmountTutor amount" id="invAmountTutorTaxi" name="invAmountTutorTaxi"' +
-                        '	min="1" />' +
+                        '	min="1" value="' + setCurrency(item.taxi) + '" />' +
                         '</td>' +
                         '<td>' +
                         '<input type="date" id="dateInvoiceTutorTaxi" class="tdInvoiceCss dateInvoiceTutor datePaid" />' +
                         '</td>' +
                         '<td>' +
                         '<input type="text" id="expCodeTutorTaxi" name="expCodePresenterAccom" class="tdInvoiceCss expCodePresenter expenseCode"' +
-                        'onkeyup = "ResetErrorMsg();" /> ' +
+                        'onkeyup = "ResetErrorMsg();" value="' + expCode + '" /> ' +
                         '</td>' +
                         '<td>' +
                         '</td>' +
                         '</tr>';
                     $('#tutorTable').append(tutorDiv); // Adding these controls to Main table class 
+                    $('.tutor' + index + '').val(item.resource_person_id).change();
+                    fnCalculateTutorSubTotal();
+
                 }
 
-
                 j++;
+
             } else if (item.rtype == "C") {
 
                 if (k == 0) {
@@ -5813,27 +6036,49 @@
                     $('#datePaidConvenor').val(item.datePaid);
                     $('#mealConvenor').val(setCurrency(item.meal));
 
-                    $('#feeSubTotalConvenor').val(setCurrency(item.rate * item.hours_));
-                    $('#expSubTotalConvenor').val(setCurrency(item.accomadation + item.travelEx + item.taxi + item.meal));
-                    $('#totalConvenor').val(setCurrency((item.accomadation + item.travelEx + item.taxi + item.meal) + (item.rate * item.hours_)));
+
+
+                    $('#invAmountConvenorAccom').val(setCurrency(item.accomadation));
+                    $('#invAmountConvenorTravel').val(setCurrency(item.travelEx));
+                    $('#invAmountConvenorMeal').val(setCurrency(item.meal));
+                    $('#invAmountConvenorTaxi').val(setCurrency(item.taxi));
+
+                    $('#txtInvNoConvenorAccom').val(invNo);
+                    $('#txtInvNoConvenorTvExp').val(invNo);
+                    $('#txtInvNoConvenorMeal').val(invNo);
+                    $('#txtInvNoConvenorTaxi').val(invNo);
+
+                    $('#expCodeConvenorAccom').val(expCode);
+                    $('#expCodeConvenorTvExp').val(expCode);
+                    $('#expCodeConvenorMeal').val(expCode);
+                    $('#expCodeConvenorTaxi').val(expCode);
+
+                    $('#Text95').val(invNo);
+                    $('#feeSubTotalConvenor').val(feeSubTotal);
+                    $('#feeSubTotalFinalConvenor').val(feeSubTotal);
+                    $('#expSubTotalConvenor').val(expSubTotal);
+                    $('#expSubTotalFinalConvenor').val(expSubTotal);
+                    $('#invSubTotalAmountConvenor').val(total);
+                    $('#totalConvenor').val(total);
+                    $('#totalFinalConvenor').val(total);
 
                 } else {
                     debugger;
                     var optionsConv = $('#ddlConvenors').html();
                     var optionsConvExpCode = $('#ddlConvenorExpCode').html();
                     var convenorDiv = '<tr class="convenorList">' +
-                        '<td><center><select id="ddlConvenors" class="form-control presenterID" value="' + item.resource_person_id + '" >' + optionsConv + '</select></center></td>' +
+                        '<td><center><select id="ddlConvenors" class="form-control presenterID convenor' + index + '" >' + optionsConv + '</select></center></td>' +
                         '<td><input type="text" id="sessionConvenor"  value="' + item.session_ + '" class="OtherExpenseInput session_"/></td>' +
                         '<td><center><input type="text" id="hourConvenor" value="' + item.hours_ + '" class="OtherExpenseInput expConvenorCalClass hours_"/></center></td>' +
                         '<td><center><input type="text" id="rateConvenor" value="' + setCurrency(item.rate) + '" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" placeholder="rate" class="OtherExpenseInput expConvenorCalClass rate" /></center></td>' +
-                        '<td><input type="text" id="feeSubTotalConvenor" class="OtherExpenseInput feeSubTotalConvenor" disabled/></td>' +
+                        '<td><input type="text" id="feeSubTotalConvenor" value="' + feeSubTotal + '" class="OtherExpenseInput feeSubTotalConvenor" disabled/></td>' +
                         '<td></td>' +
                         '<td><center><input type="text" id="accomConvenor" value="' + setCurrency(item.accomadation) + '"  pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" placeholder="amount" class="OtherExpenseInput expConvenorCalClass accomadation" /></center></td>' +
                         '<td><center><input type="text" id="travelExpConvenor" value="' + setCurrency(item.travelEx) + '" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" placeholder="amount" class="OtherExpenseInput expConvenorCalClass travelEx meal" /></center></td>' +
                         '<td><center><input type="text" id="mealConvenor" value="' + setCurrency(item.meal) + '"  pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" placeholder="amount" class="OtherExpenseInput expConvenorCalClass taxi" /></center></td>' +
                         '<td><center><input type="text" id="taxiPetrolConvenor" value="' + setCurrency(item.taxi) + '"  pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" placeholder="amount" class="OtherExpenseInput expConvenorCalClass" /></center></td>' +
-                        '<td><input type="text" id="expSubTotalConvenor" class="OtherExpenseInput expSubTotalConvenor" disabled/></td>' +
-                        '<td><input type="text" id="totalConvenor" class="OtherExpenseInput totalConvenor" disabled/></td>' +
+                        '<td><input type="text" id="expSubTotalConvenor"  value="' + expSubTotal + '" class="OtherExpenseInput expSubTotalConvenor" disabled/></td>' +
+                        '<td><input type="text" id="totalConvenor"  value="' + total + '" class="OtherExpenseInput totalConvenor" disabled/></td>' +
                         '<td></td>' +
                         '<td><input type="text" id="invNoConvenor" value="' + item.invNumber + '"  class="tdInvoiceCss invNumber" /></td>' +
                         '<td><center><input type="text" id="invAmountConvenor" value="' + setCurrency(item.amount) + '"   class="tdInvoiceCss expConvenorCalClass invAmountConvenor amount" /></center></td>' +
@@ -5844,57 +6089,75 @@
                         '<tr class="convenorList">' +
                         '<td colspan="13"></td>' +
                         '<td>' +
-                        '<input class="tdInvoiceCss txtInvNoConvenor invNumber" id="txtInvNoConvenorAccom" />' +
+                        '<input class="tdInvoiceCss txtInvNoConvenor invNumber" id="txtInvNoConvenorAccom" value="' + item.invNumber + '" />' +
                         '</td>' +
                         '<td>' +
                         '<input' +
-                        '	class="tdInvoiceCss expConvenorCalClass invAmountConvenor amount" id="invAmountConvenorAccom" name="invAmountConvenor" />' +
+                        '	class="tdInvoiceCss expConvenorCalClass invAmountConvenor amount" id="invAmountConvenorAccom" name="invAmountConvenor" value="' + setCurrency(item.accomadation) + '"  />' +
                         '</td>' +
                         '<td>' +
                         '<input type="date" id="dateInvoiceConvenorAccom" class="tdInvoiceCss dateInvoiceConvenor datePaid" />' +
                         '</td>' +
                         '<td>' +
                         '<input type="text" id="expCodeConvenorAccom" name="expCodeConvenorAccom" class="tdInvoiceCss expCodeConvenor expenseCode"' +
-                        '		onkeyup="ResetErrorMsg();" />' +
+                        '		onkeyup="ResetErrorMsg();"  value="' + expCode + '" />' +
                         '</td>' +
                         '<td>' +
                         '</td>' +
                         '</tr>' +
-                        '<tr class="convenorList">' +
-                        '<td colspan="13"></td>' +
+                        '<tr class="convenorList">' 
+                        +'<td colspan="2" class="auto-style1"></td>'
+                        + '<td class="auto-style1" style="background-color:#7092BE; color:white;">B.Hours</td>'
+                        + '<td class="auto-style1" style="background-color:#7092BE; color:white;">B.Rate</td>'
+                        + '<td class="auto-style1"></td>'
+                        + '<td colspan="8" class="auto-style1"></td>'+
                         '<td>' +
-                        '<input class="tdInvoiceCss txtInvNoConvenor invNumber" id="txtInvNoConvenorTravel" />' +
+                        '<input class="tdInvoiceCss txtInvNoConvenor invNumber" id="txtInvNoConvenorTravel"  value="' + item.invNumber + '"  />' +
                         '</td>' +
                         '<td>' +
                         '<input' +
                         '	class="tdInvoiceCss expConvenorCalClass invAmountConvenor amount" id="invAmountConvenorTravel" name="invAmountConvenorTravel"' +
-                        '	min="1" />' +
+                        '	min="1" value="' + setCurrency(item.travelEx) + '" />' +
                         '</td>' +
                         '<td>' +
                         '<input type="date" id="dateInvoiceConvenorTravel" class="tdInvoiceCss dateInvoiceConvenor datePaid" />' +
                         '</td>' +
                         '<td>' +
                         '<input type="text" id="expCodeConvenorTravel" name="expCodeConvenorTravel" class="tdInvoiceCss expCodeConvenor expenseCode"' +
-                        '		onkeyup="ResetErrorMsg();" />' +
+                        '		onkeyup="ResetErrorMsg()"   value="' + expCode + '"  />' +
                         '</td>' +
                         '<td>' +
                         '</td>' +
                         '</tr>' +
-                        '<tr class="convenorList">' +
-                        '<td colspan="13"></td>' +
+                        '<tr class="convenorList">' 
+                        +'<td colspan="2"></td>'
+                        + '<td>'
+                        + '	<input onkeypress="return event.charCode === 0 || /\d/.test(String.fromCharCode(event.charCode));"'
+                        + '		class="OtherExpenseInput hours_ expConvenorCalClass" id="bHourConvenor" name="bHourConvenor" />'
+                        + '</td>'
+                        + '<td>'
+                        + '	<input pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" placeholder="rate"'
+                        + '		class="OtherExpenseInput hours_ expConvenorCalClass" id="bRateConvenor" name="bRateConvenor" />'
+                        + '</td>'
+                        + '<td>'
+                        + '	<input onkeypress="return event.charCode === 0 || /\d/.test(String.fromCharCode(event.charCode));"'
+                        + '		id="bFeeSubTotalConvenor" name="bFeeSubTotalConvenor" class="OtherExpenseInput bFeeSubTotalConvenor"'
+                        + '		readonly="readonly" />'
+                        + '</td>'
+                        + '<td colspan="8"></td>'+
                         '<td>' +
-                        '<input class="tdInvoiceCss txtInvNoConvenor invNumber" id="txtInvNoConvenorMeal" />' +
+                        '<input class="tdInvoiceCss txtInvNoConvenor invNumber" id="txtInvNoConvenorMeal"  value="' + item.invNumber + '" />' +
                         '</td>' +
                         '<td>' +
                         '<input' +
-                        '	class="tdInvoiceCss expConvenorCalClass invAmountConvenor amount" id="invAmountConvenorMeal" name="invAmountConvenorMeal"/>' +
+                        '	class="tdInvoiceCss expConvenorCalClass invAmountConvenor amount" id="invAmountConvenorMeal" name="invAmountConvenorMeal" value="' + setCurrency(item.meal) + '"/>' +
                         '</td>' +
                         '<td>' +
                         '<input type="date" id="dateInvoiceConvenorMeal" class="tdInvoiceCss dateInvoiceConvenor datePaid" />' +
                         '</td>' +
                         '<td>' +
                         '<input type="text" id="expCodeConvenorMeal" name="expCodeConvenorAccom" class="tdInvoiceCss expCodeConvenor expenseCode"' +
-                        '		onkeyup="ResetErrorMsg();" />' +
+                        '		onkeyup="ResetErrorMsg();" value="' + expCode + '"  />' +
                         '</td>' +
                         '<td>' +
                         '</td>' +
@@ -5902,28 +6165,32 @@
                         '<tr class="convenorList">' +
                         '<td colspan="13"></td>' +
                         '<td>' +
-                        '<input class="tdInvoiceCss txtInvNoConvenor invNumber" id="txtInvNoConvenorTaxi" />' +
+                        '<input class="tdInvoiceCss txtInvNoConvenor invNumber" id="txtInvNoConvenorTaxi" value="' + item.invNumber + '" />' +
                         '</td>' +
                         '<td>' +
                         '<input' +
                         '	class="tdInvoiceCss expConvenorCalClass invAmountConvenor amount" id="invAmountConvenorTaxi" name="invAmountConvenorTaxi"' +
-                        '	min="1" />' +
+                        '	min="1" value="' + setCurrency(item.taxi) + '" />' +
                         '</td>' +
                         '<td>' +
                         '<input type="date" id="dateInvoiceConvenorTaxi" class="tdInvoiceCss dateInvoiceConvenor datePaid" />' +
                         '</td>' +
                         '<td>' +
                         '<input type="text" id="expCodeConvenorTaxi" name="expCodeConvenorAccom" class="tdInvoiceCss expCodeConvenor expenseCode"' +
-                        '		onkeyup="ResetErrorMsg();" />' +
+                        '		onkeyup="ResetErrorMsg();" value="' + expCode + '" />' +
                         '</td>' +
                         '<td>' +
                         '</td>' +
                         '</tr>';
                     $('#convenorTable').append(convenorDiv); // Adding these controls to Main table class 
+                    $('.convenor' + index + '').val(item.resource_person_id).change();
+                    fnCalculateConvenorSubTotal();
+
                 }
 
                 k++;
             }
+        }
     }
 </script>
 <script type="text/javascript">
@@ -6579,6 +6846,14 @@
 
         $("#txtProjectedPLMin").val(setCurrency(incomeTotalMin - totalCostMin));
         $("#txtProjectedPLIncOvMin").val(setCurrency(incomeTotalMin - (totalCostMin / parseFloat(1 - overHead))));
+
+        if ((incomeTotalMin - totalCostMin) < 0) {
+            $("#txtProjectedPLMin").css("background-color","red");
+            $("#txtProjectedPLIncOvMin").css("background-color", "red");
+            $("#txtProjectedPLMin").css("color", "white");
+            $("#txtProjectedPLIncOvMin").css("color", "white");
+        }
+
         if (incomeTotalMin > 0) {
             $("#txtGMMin").val(Math.round(parseFloat((incomeTotalMin - totalCostMin) / incomeTotalMin) * 100).toFixed(0) + '%');
             $("#txtGMIncOvMin").val(Math.round(((incomeTotalMin - (totalCostMin / parseFloat(1 - overHead))) / incomeTotalMin) * 100) + '%');

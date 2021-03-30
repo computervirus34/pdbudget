@@ -34,6 +34,103 @@
         }
         return false;
     });
+    $("#btnModify").click(function () {
+        debugger;
+        var courseInfoes = JSON.stringify(getCourseInfo());
+        console.log(courseInfoes);
+        var resourcePerson = JSON.stringify(getPresenterTutorConvenorInfo());
+        console.log(resourcePerson);
+        var otherExpenses = JSON.stringify(getOtherExpenses());
+        console.log(otherExpenses);
+        var message = validateInput();
+        if (message == "true") {
+            $.ajax({
+                url: 'PDBudgetEntry.aspx/UpdateCourseInfo',
+                type: 'POST',
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify({ 'courseInfoes': courseInfoes, 'resource': resourcePerson, 'otherExpenses': otherExpenses }),
+                success: function (response) {
+                    if (response.d == "-1") {
+                        alert("Error while Adding course information.");
+                    }
+                    else {
+                        alert("Data Upadated Successfully");
+                        window.location.reload();
+                    }
+                },
+                error: function () {
+                    alert("Error while updating course Information.");
+                }
+            });
+        } else {
+            alert(message);
+        }
+        return false;
+    });
+
+
+    $("#btnForecastApprove").click(function () {
+        debugger;
+        //console.log(otherExpenses);
+        var courseCode = $("")
+        var message = validateInput();
+        if (message == "true") {
+            var courseCode = $("#txtCourseCode").val();
+            $.ajax({
+                url: 'PDBudgetEntry.aspx/ApproveForecast',
+                type: 'POST',
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                data: "{'user':" + JSON.stringify(user) + ",'courseCode':" + JSON.stringify(courseCode) + "}",
+                success: function (response) {
+                    if (response.d == "-1") {
+                        alert("Error in forecast approve!");
+                    }
+                    else {
+                        alert("Approval Forecasted Successfully!");
+                        window.location.reload();
+                    }
+                },
+                error: function () {
+                    alert("Error in forecast approve!");
+                }
+            });
+        } else {
+            alert(message);
+        }
+        return false;
+    });
+
+    $("#btnSignOff").click(function () {
+        debugger;
+        var message = validateInput();
+        if (message == "true") {
+            var courseCode = $("#txtCourseCode").val();
+            $.ajax({
+                url: 'PDBudgetEntry.aspx/CourseSignOff',
+                type: 'POST',
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                data: "{'user':" + JSON.stringify(user) + ",'courseCode':" + JSON.stringify(courseCode) + "}",
+                success: function (response) {
+                    if (response.d == "-1") {
+                        alert("Error at final sign off");
+                    }
+                    else {
+                        alert("Sign off completed successfully!");
+                        window.location.reload();
+                    }
+                },
+                error: function () {
+                    alert("Error at final sign off");
+                }
+            });
+        } else {
+            alert(message);
+        }
+        return false;
+    });
 
     $("#ddlSuburb").change(function () {
         debugger;
@@ -62,7 +159,6 @@
     });
 
 });
-
 function getPresenterTutorConvenorInfo() {
     var resourcePerson = [];
     var i = 0;
@@ -73,7 +169,7 @@ function getPresenterTutorConvenorInfo() {
         if (i % 5 == 0) {
             var resource_person_id = $(this).find('.presenterID').val();
             var session_ = $(this).find('.session_').val();
-            var hours_ = Number($(this).find('.hours_').val().replace(/[$,]+/g, "")) || Number(0);
+            var hours_ = parseFloat($(this).find('.hours_').val().replace(/[$,]+/g, "")) || parseFloat(0);
             var rate = parseFloat($(this).find('.rate').val().replace(/[$,]+/g, "")) || parseFloat(0);
             var accomadation = parseFloat($(this).find('.accomadation').val().replace(/[$,]+/g, "")) || parseFloat(0);
             var travelEx = parseFloat($(this).find('.travelEx').val().replace(/[$,]+/g, "")) || parseFloat(0);
@@ -265,7 +361,7 @@ function validateInput() {
     return message.length == 0 ? "true" : message;
 }
 
-function getCourseInfo() {
+function getCourseInfo(operation) {
     var courseCode = $('#txtCourseCode').val();
     var courseName = $('#ddlCourseName').val();
     var aptifyId = $('#txtAptifyID').val();
@@ -286,13 +382,13 @@ function getCourseInfo() {
     var courseDate = $('#txtCourseDate').val();
     var StartDate = $('#txtIterationBeginDate').val();
     var EndDate = $('#txtIterationEndDate').val();
-    var cretedby = '<%=Session["user"].ToString() %>'
+    var cretedby = user;
     //var createdon = $('#A1').val();
-    //var modifiedby = $('#A1').val();
+    var modifiedby = user;
     //var modifiedon = $('#A1').val();
-    //var forecastapprovedby = $('#A1').val();
+    //var forecastapprovedby = Session["user"];
     //var forecastapprovedate = $('#A1').val();
-    //var signedoffby = $('#A1').val();
+    //var signedoffby = Session["user"];
     //var signedoffon = $('#A1').val();
     var NoPresenters = parseFloat($('#txtTotalNumberOfPresentersOnly').val().replace(/[$,]+/g, "")) || parseFloat(0);
     var totalConsultantIncPresenter = parseFloat($('#txtTotalNoOfConsultantsInput').val().replace(/[$,]+/g, "")) || parseFloat(0);
@@ -389,13 +485,13 @@ function getCourseInfo() {
         'StartDate': StartDate,
         'EndDate': EndDate,
         'cretedby': cretedby,
-        /*'createdon': createdon,
+        //'createdon': createdon,
         'modifiedby': modifiedby,
-        'modifiedon': modifiedon,
-        'forecastapprovedby': forecastapprovedby,
-        'forecastapprovedate': forecastapprovedate,
-        'signedoffby': signedoffby,
-        'signedoffon': signedoffon,*/
+        //'modifiedon': modifiedon,
+        //'forecastapprovedby': forecastapprovedby,
+        //'forecastapprovedate': forecastapprovedate,
+        //'signedoffby': signedoffby,
+        //'signedoffon': signedoffon,
         'NoPresenters': NoPresenters,
         'totalConsultantIncPresenter': totalConsultantIncPresenter,
         'numberofFreePlace': numberofFreePlace,

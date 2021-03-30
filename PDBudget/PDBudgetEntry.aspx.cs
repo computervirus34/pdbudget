@@ -35,7 +35,7 @@ namespace PDBudget
             }
             else
             {
-                if (!Session["user"].ToString().Equals("admin"))
+                if (!Session["userRole"].ToString().Equals("admin"))
                 {
                     /*MenuItem item = Menu1.FindItem("Parameter");
                     item.Parent.ChildItems.Remove(item);*/
@@ -282,6 +282,78 @@ namespace PDBudget
             }
         }
 
+        [WebMethod]
+        public static string ApproveForecast(string user,string courseCode)
+        {
+            //string zip;
+            try
+            {
+                //int id = Convert.ToInt32(suburb);
+                string constr = ConfigurationManager.ConnectionStrings["MysqlConnection"].ConnectionString;
+                string query = @"update courseevent set forecastapprovedby = @forecastapprovedby, 
+                                forecastapprovedate=@forecastapprovedate,courseStatus=@courseStatus,
+                                isForeCastApproved=@isForeCastApproved where courseCode=@courseCode";
+                using (MySqlConnection con = new MySqlConnection(constr))
+                {
+                    using (MySqlCommand cmd = new MySqlCommand(query))
+                    {
+                        cmd.CommandType = CommandType.Text;
+                        cmd.Parameters.AddWithValue("@forecastapprovedby", user);
+                        cmd.Parameters.AddWithValue("@forecastapprovedate", System.DateTime.Now);
+                        cmd.Parameters.AddWithValue("@courseStatus", "Active");
+                        cmd.Parameters.AddWithValue("@isForeCastApproved", "Y");
+                        cmd.Parameters.AddWithValue("@courseCode", courseCode);
+                        cmd.Connection = con;
+                        con.Open();
+                        cmd.ExecuteNonQuery();
+                        con.Close();
+                    }
+                }
+                return "1";
+            }
+            catch (Exception ex)
+            {
+                return "-1";
+            }
+        }
+
+
+        [WebMethod]
+        public static string CourseSignOff(string user, string courseCode)
+        {
+            string zip;
+            try
+            {
+                //int id = Convert.ToInt32(suburb);
+                string constr = ConfigurationManager.ConnectionStrings["MysqlConnection"].ConnectionString;
+                string query = @"update courseevent set signedoffby = @signedoffby, 
+                                signedoffon=@signedoffon,courseStatus=@courseStatus,
+                                isSignedOff=@isSignedOff where courseCode=@courseCode";
+                using (MySqlConnection con = new MySqlConnection(constr))
+                {
+                    using (MySqlCommand cmd = new MySqlCommand(query))
+                    {
+                        cmd.CommandType = CommandType.Text;
+                        cmd.Parameters.AddWithValue("@signedoffby", user);
+                        cmd.Parameters.AddWithValue("@signedoffon", System.DateTime.Now);
+                        cmd.Parameters.AddWithValue("@courseStatus", "Complete");
+                        cmd.Parameters.AddWithValue("@isSignedOff", "Y");
+                        cmd.Parameters.AddWithValue("@courseCode", courseCode);
+                        cmd.Connection = con;
+                        con.Open();
+                        cmd.ExecuteNonQuery();
+                        con.Close();
+                    }
+                }
+                return "1";
+            }
+            catch (Exception ex)
+            {
+                return "-1";
+            }
+        }
+
+
 
         [WebMethod]
         public static string SaveCourseInfo(string courseInfoes, string resource, string otherExpenses)
@@ -455,6 +527,419 @@ namespace PDBudget
             catch (Exception ex)
             {
                 return "-1";
+            }
+        }
+
+        [WebMethod]
+        public static string UpdateCourseInfo(string courseInfoes, string resource, string otherExpenses)
+        {
+            try
+            {
+                CourseEvent courseEvent = new CourseEvent();
+                List<ResourcePerson> lRp = new List<ResourcePerson>();
+                List<OtherExpenses> lOp = new List<OtherExpenses>();
+
+                var courseInfo = JsonConvert.DeserializeObject<List<CourseEvent>>(courseInfoes);
+                var resourceInfo = JsonConvert.DeserializeObject<List<ResourcePerson>>(resource);
+                var otherExpense = JsonConvert.DeserializeObject<List<OtherExpenses>>(otherExpenses);
+
+                foreach (var item in courseInfo)
+                {
+                    //courseEvent.id = item.id;
+                    courseEvent.courseCode = item.courseCode;
+                    courseEvent.courseName = item.courseName;
+                    courseEvent.aptifyId = item.aptifyId;
+                    courseEvent.courseStatus = item.courseStatus;
+                    courseEvent.group_ = item.group_;
+                    courseEvent.CPDHours = item.CPDHours;
+                    courseEvent.CourseLevel = item.CourseLevel;
+                    courseEvent.co_host = item.co_host;
+                    courseEvent.CourseDurationDays = item.CourseDurationDays;
+                    courseEvent.coordinator = item.coordinator;
+                    courseEvent.Additional_group = item.Additional_group;
+                    courseEvent.country = item.country;
+                    courseEvent.state_ = item.state_;
+                    courseEvent.reg_metro_int = item.reg_metro_int;
+                    courseEvent.venue = item.venue;
+                    courseEvent.suburb_city = item.suburb_city;
+                    courseEvent.zipcode = item.zipcode;
+                    courseEvent.courseDate = item.courseDate;
+                    courseEvent.StartDate = item.StartDate;
+                    courseEvent.EndDate = item.EndDate;
+                    courseEvent.cretedby = item.cretedby;
+                    courseEvent.createdon = String.IsNullOrEmpty(item.createdon) ? null : item.createdon;
+                    courseEvent.modifiedby = item.modifiedby;
+                    /*courseEvent.modifiedon = item.modifiedon;
+                    courseEvent.forecastapprovedby = item.forecastapprovedby;
+                    courseEvent.forecastapprovedate = item.forecastapprovedate;
+                    courseEvent.signedoffby = item.signedoffby;
+                    courseEvent.signedoffon = item.signedoffon;*/
+                    courseEvent.NoPresenters = item.NoPresenters;
+                    courseEvent.totalConsultantIncPresenter = item.totalConsultantIncPresenter;
+                    courseEvent.numberofFreePlace = item.numberofFreePlace;
+                    courseEvent.minimumParticipant = item.minimumParticipant;
+                    courseEvent.averageParticipant = item.averageParticipant;
+                    courseEvent.minimumAchieve40PerMargin = item.minimumAchieve40PerMargin;
+                    courseEvent.maximumAvailable = item.maximumAvailable;
+                    courseEvent.contributionOverheadPercent = item.contributionOverheadPercent;
+                    courseEvent.participantFeeEBDistantMin = item.participantFeeEBDistantMin;
+                    courseEvent.diffBWEBSP = item.diffBWEBSP;
+                    courseEvent.participantPerEBDistant = item.participantPerEBDistant;
+                    courseEvent.participantPerEBApa = item.participantPerEBApa;
+                    courseEvent.participantPerEBNonMember = item.participantPerEBNonMember;
+                    courseEvent.participantPerNonDistant = item.participantPerNonDistant;
+                    courseEvent.participantPerNonApa = item.participantPerNonApa;
+                    courseEvent.participantPerNonMember = item.participantPerNonMember;
+                    courseEvent.actparticipantEBDistant = item.actparticipantEBDistant;
+                    courseEvent.actparticipantEBApa = item.actparticipantEBApa;
+                    courseEvent.actparticipantEBNonMember = item.actparticipantEBNonMember;
+                    courseEvent.actparticipantNonDistant = item.actparticipantNonDistant;
+                    courseEvent.actparticipantNonApa = item.actparticipantNonApa;
+                    courseEvent.actparticipantNonMember = item.actparticipantNonMember;
+                    courseEvent.sponsorshipMin = item.sponsorshipMin;
+                    courseEvent.morningTeaDays = item.morningTeaDays;
+                    courseEvent.morningTeaRate = item.morningTeaRate;
+                    courseEvent.teaInvNo = item.teaInvNo;
+                    courseEvent.teaInvAMount = item.teaInvAMount;
+                    courseEvent.teaInvDate = item.teaInvDate;
+                    courseEvent.teaInvCode = item.teaInvCode;
+                    courseEvent.lunchDays = item.lunchDays;
+                    courseEvent.lunchRate = item.lunchRate;
+                    courseEvent.lunchInvNo = item.lunchInvNo;
+                    courseEvent.lunchInvAMount = item.lunchInvAMount;
+                    courseEvent.lunchInvDate = item.lunchInvDate;
+                    courseEvent.lunchInvCode = item.lunchInvCode;
+                    courseEvent.afternoonTeaDays = item.afternoonTeaDays;
+                    courseEvent.afternoonTeaRate = item.afternoonTeaRate;
+                    courseEvent.aTeaInvNo = item.aTeaInvNo;
+                    courseEvent.aTeaInvAMount = item.aTeaInvAMount;
+                    courseEvent.aTeaInvDate = item.aTeaInvDate;
+                    courseEvent.aTeaInvCode = item.aTeaInvCode;
+                    courseEvent.venueHireDays = item.venueHireDays;
+                    courseEvent.venueHireRate = item.venueHireRate;
+                    courseEvent.venueInvNo = item.venueInvNo;
+                    courseEvent.venueInvAMount = item.venueInvAMount;
+                    courseEvent.venueInvDate = item.venueInvDate;
+                    courseEvent.venueInvCode = item.venueInvCode;
+                    courseEvent.poolHireDays = item.poolHireDays;
+                    courseEvent.poolHireRate = item.poolHireRate;
+                    courseEvent.poolInvNo = item.poolInvNo;
+                    courseEvent.poolInvAMount = item.poolInvAMount;
+                    courseEvent.poolInvDate = item.poolInvDate;
+                    courseEvent.poolInvCode = item.poolInvCode;
+                    courseEvent.avHireDays = item.avHireDays;
+                    courseEvent.avHireRate = item.avHireRate;
+                    courseEvent.avInvNo = item.avInvNo;
+                    courseEvent.avInvAMount = item.avInvAMount;
+                    courseEvent.avInvDate = item.avInvDate;
+                    courseEvent.avInvCode = item.avInvCode;
+                    courseEvent.manualFeePerparticipant = item.manualFeePerparticipant;
+                    courseEvent.manualInvNo = item.manualInvNo;
+                    courseEvent.manualInvAMount = item.manualInvAMount;
+                    courseEvent.manualInvDate = item.manualInvDate;
+                    courseEvent.manualInvCode = item.manualInvCode;
+                    courseEvent.sundrySupplies = item.sundrySupplies;
+                    courseEvent.sundryInvNo = item.sundryInvNo;
+                    courseEvent.sundryInvAMount = item.sundryInvAMount;
+                    courseEvent.sundryInvDate = item.sundryInvDate;
+                    courseEvent.sundryInvCode = item.sundryInvCode;
+                    /*courseEvent.isModified = item.isModified;
+                    courseEvent.isForeCastApproved = item.isForeCastApproved;
+                    courseEvent.isSignedOff = item.isSignedOff;*/
+
+                }
+
+
+                foreach (var item in resourceInfo)
+                {
+                    ResourcePerson rp = new ResourcePerson();
+                    rp.courseCode = item.courseCode;
+                    rp.rtype = item.rtype;
+                    rp.resource_person_id = item.resource_person_id;
+                    rp.session_ = item.session_;
+                    rp.hours_ = item.hours_;
+                    rp.rate = item.rate;
+                    rp.accomadation = item.accomadation;
+                    rp.travelEx = item.travelEx;
+                    rp.meal = item.meal;
+                    rp.taxi = item.taxi;
+                    rp.expenseCode = item.expenseCode;
+                    rp.invNumber = item.invNumber;
+                    rp.datePaid = item.datePaid;
+                    rp.amount = item.amount;
+
+                    lRp.Add(rp);
+                }
+
+                foreach (var item in otherExpense)
+                {
+                    OtherExpenses oe = new OtherExpenses();
+                    oe.courseCode = item.courseCode;
+                    oe.otherExpenseName = item.otherExpenseName;
+                    oe.expenseCode = item.expenseCode;
+                    oe.amount = item.amount;
+                    oe.invNumber = item.invNumber;
+                    oe.invAmount = item.invAmount;
+                    oe.datePaid = item.datePaid;
+                    oe.invExpCode = item.invExpCode;
+
+
+                    lOp.Add(oe);
+                }
+
+                PDBudgetEntry pdb = new PDBudgetEntry();
+                int pout = 0;
+                pout = pdb.UpdateCourseEvent(courseEvent, lRp, lOp);
+                if (pout == 0)
+                {
+                    return "1";
+                }
+                else
+                {
+                    return "-1";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "-1";
+            }
+        }
+
+        private int UpdateCourseEvent(CourseEvent courseEvent, List<ResourcePerson> lRp, List<OtherExpenses> lOp)
+        {
+            try
+            {
+                string constr = ConfigurationManager.ConnectionStrings["MysqlConnection"].ConnectionString;
+                using (MySqlConnection con = new MySqlConnection(constr))
+                {
+                    MySqlTransaction txn;
+                    string insQuery = getUpdateQuery();
+                    using (MySqlCommand cmd = new MySqlCommand(insQuery))
+                    {
+                        cmd.CommandType = CommandType.Text;
+                        //cmd.Parameters.AddWithValue("@id", courseInfoes.id);
+                        cmd.Parameters.AddWithValue("@courseCode", courseEvent.courseCode);
+                        cmd.Parameters.AddWithValue("@courseName", courseEvent.courseName);
+                        cmd.Parameters.AddWithValue("@aptifyId", courseEvent.aptifyId);
+                        cmd.Parameters.AddWithValue("@courseStatus", courseEvent.courseStatus);
+                        cmd.Parameters.AddWithValue("@group_", courseEvent.group_);
+                        cmd.Parameters.AddWithValue("@CPDHours", courseEvent.CPDHours);
+                        cmd.Parameters.AddWithValue("@CourseLevel", courseEvent.CourseLevel);
+                        cmd.Parameters.AddWithValue("@co_host", courseEvent.co_host);
+                        cmd.Parameters.AddWithValue("@CourseDurationDays", courseEvent.CourseDurationDays);
+                        cmd.Parameters.AddWithValue("@coordinator", courseEvent.coordinator);
+                        cmd.Parameters.AddWithValue("@Additional_group", courseEvent.Additional_group);
+                        cmd.Parameters.AddWithValue("@country", courseEvent.country);
+                        cmd.Parameters.AddWithValue("@state_", courseEvent.state_);
+                        cmd.Parameters.AddWithValue("@reg_metro_int", courseEvent.reg_metro_int);
+                        cmd.Parameters.AddWithValue("@venue", courseEvent.venue);
+                        cmd.Parameters.AddWithValue("@suburb_city", courseEvent.suburb_city);
+                        cmd.Parameters.AddWithValue("@zipcode", courseEvent.zipcode);
+                        cmd.Parameters.AddWithValue("@courseDate", courseEvent.courseDate);
+                        cmd.Parameters.AddWithValue("@StartDate", courseEvent.StartDate);
+                        cmd.Parameters.AddWithValue("@EndDate", courseEvent.EndDate);
+                        cmd.Parameters.AddWithValue("@modifiedby", courseEvent.modifiedby);
+                        cmd.Parameters.AddWithValue("@modifiedon", System.DateTime.Now);
+                        cmd.Parameters.AddWithValue("@NoPresenters", courseEvent.NoPresenters);
+                        cmd.Parameters.AddWithValue("@totalConsultantIncPresenter", courseEvent.totalConsultantIncPresenter);
+                        cmd.Parameters.AddWithValue("@numberofFreePlace", courseEvent.numberofFreePlace);
+                        cmd.Parameters.AddWithValue("@minimumParticipant", courseEvent.minimumParticipant);
+                        cmd.Parameters.AddWithValue("@averageParticipant", courseEvent.averageParticipant);
+                        cmd.Parameters.AddWithValue("@minimumAchieve40PerMargin", courseEvent.minimumAchieve40PerMargin);
+                        cmd.Parameters.AddWithValue("@maximumAvailable", courseEvent.maximumAvailable);
+                        cmd.Parameters.AddWithValue("@contributionOverheadPercent", courseEvent.contributionOverheadPercent);
+                        cmd.Parameters.AddWithValue("@participantFeeEBDistantMin", courseEvent.participantFeeEBDistantMin);
+                        cmd.Parameters.AddWithValue("@diffBWEBSP", courseEvent.diffBWEBSP);
+                        cmd.Parameters.AddWithValue("@participantPerEBDistant", courseEvent.participantPerEBDistant);
+                        cmd.Parameters.AddWithValue("@participantPerEBApa", courseEvent.participantPerEBApa);
+                        cmd.Parameters.AddWithValue("@participantPerEBNonMember", courseEvent.participantPerEBNonMember);
+                        cmd.Parameters.AddWithValue("@participantPerNonDistant", courseEvent.participantPerNonDistant);
+                        cmd.Parameters.AddWithValue("@participantPerNonApa", courseEvent.participantPerNonApa);
+                        cmd.Parameters.AddWithValue("@participantPerNonMember", courseEvent.participantPerNonMember);
+                        cmd.Parameters.AddWithValue("@actparticipantEBDistant", courseEvent.actparticipantEBDistant);
+                        cmd.Parameters.AddWithValue("@actparticipantEBApa", courseEvent.actparticipantEBApa);
+                        cmd.Parameters.AddWithValue("@actparticipantEBNonMember", courseEvent.actparticipantEBNonMember);
+                        cmd.Parameters.AddWithValue("@actparticipantNonDistant", courseEvent.actparticipantNonDistant);
+                        cmd.Parameters.AddWithValue("@actparticipantNonApa", courseEvent.actparticipantNonApa);
+                        cmd.Parameters.AddWithValue("@actparticipantNonMember", courseEvent.actparticipantNonMember);
+                        cmd.Parameters.AddWithValue("@sponsorshipMin", courseEvent.sponsorshipMin);
+                        cmd.Parameters.AddWithValue("@morningTeaDays", courseEvent.morningTeaDays);
+                        cmd.Parameters.AddWithValue("@morningTeaRate", courseEvent.morningTeaRate);
+                        cmd.Parameters.AddWithValue("@teaInvNo", courseEvent.teaInvNo);
+                        cmd.Parameters.AddWithValue("@teaInvAMount", courseEvent.teaInvAMount);
+                        cmd.Parameters.AddWithValue("@teaInvDate", courseEvent.teaInvDate);
+                        cmd.Parameters.AddWithValue("@teaInvCode", courseEvent.teaInvCode);
+                        cmd.Parameters.AddWithValue("@lunchDays", courseEvent.lunchDays);
+                        cmd.Parameters.AddWithValue("@lunchRate", courseEvent.lunchRate);
+                        cmd.Parameters.AddWithValue("@lunchInvNo", courseEvent.lunchInvNo);
+                        cmd.Parameters.AddWithValue("@lunchInvAMount", courseEvent.lunchInvAMount);
+                        cmd.Parameters.AddWithValue("@lunchInvDate", courseEvent.lunchInvDate);
+                        cmd.Parameters.AddWithValue("@lunchInvCode", courseEvent.lunchInvCode);
+                        cmd.Parameters.AddWithValue("@afternoonTeaDays", courseEvent.afternoonTeaDays);
+                        cmd.Parameters.AddWithValue("@afternoonTeaRate", courseEvent.afternoonTeaRate);
+                        cmd.Parameters.AddWithValue("@aTeaInvNo", courseEvent.aTeaInvNo);
+                        cmd.Parameters.AddWithValue("@aTeaInvAMount", courseEvent.aTeaInvAMount);
+                        cmd.Parameters.AddWithValue("@aTeaInvDate", courseEvent.aTeaInvDate);
+                        cmd.Parameters.AddWithValue("@aTeaInvCode", courseEvent.aTeaInvCode);
+                        cmd.Parameters.AddWithValue("@venueHireDays", courseEvent.venueHireDays);
+                        cmd.Parameters.AddWithValue("@venueHireRate", courseEvent.venueHireRate);
+                        cmd.Parameters.AddWithValue("@venueInvNo", courseEvent.venueInvNo);
+                        cmd.Parameters.AddWithValue("@venueInvAMount", courseEvent.venueInvAMount);
+                        cmd.Parameters.AddWithValue("@venueInvDate", courseEvent.venueInvDate);
+                        cmd.Parameters.AddWithValue("@venueInvCode", courseEvent.venueInvCode);
+                        cmd.Parameters.AddWithValue("@poolHireDays", courseEvent.poolHireDays);
+                        cmd.Parameters.AddWithValue("@poolHireRate", courseEvent.poolHireRate);
+                        cmd.Parameters.AddWithValue("@poolInvNo", courseEvent.poolInvNo);
+                        cmd.Parameters.AddWithValue("@poolInvAMount", courseEvent.poolInvAMount);
+                        cmd.Parameters.AddWithValue("@poolInvDate", courseEvent.poolInvDate);
+                        cmd.Parameters.AddWithValue("@poolInvCode", courseEvent.poolInvCode);
+                        cmd.Parameters.AddWithValue("@avHireDays", courseEvent.avHireDays);
+                        cmd.Parameters.AddWithValue("@avHireRate", courseEvent.avHireRate);
+                        cmd.Parameters.AddWithValue("@avInvNo", courseEvent.avInvNo);
+                        cmd.Parameters.AddWithValue("@avInvAMount", courseEvent.avInvAMount);
+                        cmd.Parameters.AddWithValue("@avInvDate", courseEvent.avInvDate);
+                        cmd.Parameters.AddWithValue("@avInvCode", courseEvent.avInvCode);
+                        cmd.Parameters.AddWithValue("@manualFeePerparticipant", courseEvent.manualFeePerparticipant);
+                        cmd.Parameters.AddWithValue("@manualInvNo", courseEvent.manualInvNo);
+                        cmd.Parameters.AddWithValue("@manualInvAMount", courseEvent.manualInvAMount);
+                        cmd.Parameters.AddWithValue("@manualInvDate", courseEvent.manualInvDate);
+                        cmd.Parameters.AddWithValue("@manualInvCode", courseEvent.manualInvCode);
+                        cmd.Parameters.AddWithValue("@sundrySupplies", courseEvent.sundrySupplies);
+                        cmd.Parameters.AddWithValue("@sundryInvNo", courseEvent.sundryInvNo);
+                        cmd.Parameters.AddWithValue("@sundryInvAMount", courseEvent.sundryInvAMount);
+                        cmd.Parameters.AddWithValue("@sundryInvDate", courseEvent.sundryInvDate);
+                        cmd.Parameters.AddWithValue("@sundryInvCode", courseEvent.sundryInvCode);
+                        /*cmd.Parameters.AddWithValue("@isModified", courseEvent.isModified);
+                        cmd.Parameters.AddWithValue("@isForeCastApproved", courseEvent.isForeCastApproved);
+                        cmd.Parameters.AddWithValue("@isSignedOff", courseEvent.isSignedOff);*/
+                        cmd.Connection = con;
+                        con.Open();
+                        cmd.ExecuteNonQuery();
+                        con.Close();
+                    }
+
+                    using (var cmd = con.CreateCommand())
+                    {
+                        con.Open();
+                        cmd.CommandText = "DELETE FROM presenter_tutor_convener WHERE courseCode = @courseCode";
+                        cmd.Parameters.AddWithValue("@courseCode", courseEvent.courseCode);
+                        cmd.ExecuteNonQuery();
+                        con.Close();
+                    }
+                    using (var cmd = con.CreateCommand())
+                    {
+                        con.Open();
+                        cmd.CommandText = "DELETE FROM other_expenses WHERE courseCode = @courseCode";
+                        cmd.Parameters.AddWithValue("@courseCode", courseEvent.courseCode);
+                        cmd.ExecuteNonQuery();
+                        con.Close();
+                    }
+
+                    foreach (var item in lRp)
+                    {
+                        string resQuery = @"insert into presenter_tutor_convener(courseCode
+                                            ,rtype
+                                            ,resource_person_id
+                                            ,session_
+                                            ,hours_
+                                            ,rate
+                                            ,accomadation
+                                            ,travelEx
+                                            ,meal
+                                            ,taxi
+                                            ,expenseCode
+                                            ,invNumber
+                                            ,datePaid
+                                            ,amount)
+                                            values(
+                                                 @courseCode
+                                                ,@rtype
+                                                ,@resource_person_id
+                                                ,@session_
+                                                ,@hours_
+                                                ,@rate
+                                                ,@accomadation
+                                                ,@travelEx
+                                                ,@meal
+                                                ,@taxi
+                                                ,@expenseCode
+                                                ,@invNumber
+                                                ,@datePaid
+                                                ,@amount)";
+                        using (MySqlCommand cmd = new MySqlCommand(resQuery))
+                        {
+                            cmd.CommandType = CommandType.Text;
+                            //cmd.Parameters.AddWithValue("@id", courseInfoes.id);
+                            cmd.Parameters.AddWithValue("@courseCode", item.courseCode);
+                            cmd.Parameters.AddWithValue("@rtype", item.rtype);
+                            cmd.Parameters.AddWithValue("@resource_person_id", item.resource_person_id);
+                            cmd.Parameters.AddWithValue("@session_", item.session_);
+                            cmd.Parameters.AddWithValue("@hours_", item.hours_);
+                            cmd.Parameters.AddWithValue("@rate", item.rate);
+                            cmd.Parameters.AddWithValue("@accomadation", item.accomadation);
+                            cmd.Parameters.AddWithValue("@travelEx", item.travelEx);
+                            cmd.Parameters.AddWithValue("@meal", item.meal);
+                            cmd.Parameters.AddWithValue("@taxi", item.taxi);
+                            cmd.Parameters.AddWithValue("@expenseCode", item.expenseCode);
+                            cmd.Parameters.AddWithValue("@invNumber", item.invNumber);
+                            cmd.Parameters.AddWithValue("@datePaid", item.datePaid);
+                            cmd.Parameters.AddWithValue("@amount", item.amount);
+                            cmd.Connection = con;
+                            con.Open();
+                            cmd.ExecuteNonQuery();
+                            con.Close();
+                            //txn.Commit();
+                        }
+                    }
+
+                    foreach (var item in lOp)
+                    {
+                        string resQuery = @"insert into other_expenses(courseCode
+                                                    ,otherExpenseName
+                                                    ,expenseCode
+                                                    ,amount
+                                                    ,invNumber
+                                                    ,invAmount
+                                                    ,datePaid
+                                                    ,invExpCode
+                                                    )
+                                            values(
+                                                 @courseCode
+                                                ,@otherExpenseName
+                                                ,@expenseCode
+                                                ,@amount
+                                                ,@invNumber
+                                                ,@invAmount
+                                                ,@datePaid
+                                                ,@invExpCode)";
+                        using (MySqlCommand cmd = new MySqlCommand(resQuery))
+                        {
+                            cmd.CommandType = CommandType.Text;
+                            //cmd.Parameters.AddWithValue("@id", courseInfoes.id);
+                            cmd.Parameters.AddWithValue("@courseCode", item.courseCode);
+                            cmd.Parameters.AddWithValue("@otherExpenseName", item.otherExpenseName);
+                            cmd.Parameters.AddWithValue("@expenseCode", item.expenseCode);
+                            cmd.Parameters.AddWithValue("@amount", item.amount);
+                            cmd.Parameters.AddWithValue("@invNumber", item.invNumber);
+                            cmd.Parameters.AddWithValue("@invAmount", item.invAmount);
+                            cmd.Parameters.AddWithValue("@datePaid", item.datePaid);
+                            cmd.Parameters.AddWithValue("@invExpCode", item.invExpCode);
+                            cmd.Connection = con;
+                            con.Open();
+                            cmd.ExecuteNonQuery();
+                            con.Close();
+                        }
+                    }
+                }
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                return 1;
+            }
+            finally
+            {
+                conn.Close();
             }
         }
 
@@ -866,6 +1351,102 @@ namespace PDBudget
             return query;
         }
 
+        public string getUpdateQuery()
+        {
+            string query = @"UPDATE courseevent SET 
+			courseName=@courseName
+			,aptifyId=@aptifyId
+			,courseStatus=@courseStatus
+			,group_=@group_
+			,CPDHours=@CPDHours
+			,CourseLevel=@CourseLevel
+			,co_host=@co_host
+			,CourseDurationDays=@CourseDurationDays
+			,coordinator=@coordinator
+			,Additional_group=@Additional_group
+			,country=@country
+			,state_=@state_
+			,reg_metro_int=@reg_metro_int
+			,venue=@venue
+			,suburb_city=@suburb_city
+			,zipcode=@zipcode
+			,courseDate=@courseDate
+			,StartDate=@StartDate
+			,EndDate=@EndDate
+			,modifiedby=@modifiedby
+			,modifiedon=@modifiedon
+			,NoPresenters=@NoPresenters
+			,totalConsultantIncPresenter=@totalConsultantIncPresenter
+			,numberofFreePlace=@numberofFreePlace
+			,minimumParticipant=@minimumParticipant
+			,averageParticipant=@averageParticipant
+			,minimumAchieve40PerMargin=@minimumAchieve40PerMargin
+			,maximumAvailable=@maximumAvailable
+			,contributionOverheadPercent=@contributionOverheadPercent
+			,participantFeeEBDistantMin=@participantFeeEBDistantMin
+			,diffBWEBSP=@diffBWEBSP
+			,participantPerEBDistant=@participantPerEBDistant
+			,participantPerEBApa=@participantPerEBApa
+			,participantPerEBNonMember=@participantPerEBNonMember
+			,participantPerNonDistant=@participantPerNonDistant
+			,participantPerNonApa=@participantPerNonApa
+			,participantPerNonMember=@participantPerNonMember
+			,actparticipantEBDistant=@actparticipantEBDistant
+			,actparticipantEBApa=@actparticipantEBApa
+			,actparticipantEBNonMember=@actparticipantEBNonMember
+			,actparticipantNonDistant=@actparticipantNonDistant
+			,actparticipantNonApa=@actparticipantNonApa
+			,actparticipantNonMember=@actparticipantNonMember
+			,sponsorshipMin=@sponsorshipMin
+			,morningTeaDays=@morningTeaDays
+			,morningTeaRate=@morningTeaRate
+			,teaInvNo=@teaInvNo
+			,teaInvAMount=@teaInvAMount
+			,teaInvDate=@teaInvDate
+			,teaInvCode=@teaInvCode
+			,lunchDays=@lunchDays
+			,lunchRate=@lunchRate
+			,lunchInvNo=@lunchInvNo
+			,lunchInvAMount=@lunchInvAMount
+			,lunchInvDate=@lunchInvDate
+			,lunchInvCode=@lunchInvCode
+			,afternoonTeaDays=@afternoonTeaDays
+			,afternoonTeaRate=@afternoonTeaRate
+			,aTeaInvNo=@aTeaInvNo
+			,aTeaInvAMount=@aTeaInvAMount
+			,aTeaInvDate=@aTeaInvDate
+			,aTeaInvCode=@aTeaInvCode
+			,venueHireDays=@venueHireDays
+			,venueHireRate=@venueHireRate
+			,venueInvNo=@venueInvNo
+			,venueInvAMount=@venueInvAMount
+			,venueInvDate=@venueInvDate
+			,venueInvCode=@venueInvCode
+			,poolHireDays=@poolHireDays
+			,poolHireRate=@poolHireRate
+			,poolInvNo=@poolInvNo
+			,poolInvAMount=@poolInvAMount
+			,poolInvDate=@poolInvDate
+			,poolInvCode=@poolInvCode
+			,avHireDays=@avHireDays
+			,avHireRate=@avHireRate
+			,avInvNo=@avInvNo
+			,avInvAMount=@avInvAMount
+			,avInvDate=@avInvDate
+			,avInvCode=@avInvCode
+			,manualFeePerparticipant=@manualFeePerparticipant
+			,manualInvNo=@manualInvNo
+			,manualInvAMount=@manualInvAMount
+			,manualInvDate=@manualInvDate
+			,manualInvCode=@manualInvCode
+			,sundrySupplies=@sundrySupplies
+			,sundryInvNo=@sundryInvNo
+			,sundryInvAMount=@sundryInvAMount
+			,sundryInvDate=@sundryInvDate
+			,sundryInvCode=@sundryInvCode
+			WHERE courseCode=@courseCode";
+            return query;
+        }
         protected void txtActIncomeNonMemberMin_TextChanged(object sender, EventArgs e)
         {
 
@@ -934,9 +1515,6 @@ namespace PDBudget
                         con.Close();
 
                     }
-
-
-
 
                     courseEventResourceExpenses.courseEvent = courseEvent;
                     courseEventResourceExpenses.ResourcePersons = lstResourcePerson;
@@ -1034,7 +1612,7 @@ namespace PDBudget
             courseEvent.totalConsultantIncPresenter = Convert.ToDecimal(ds.Tables[0].Rows[0]["totalConsultantIncPresenter"].ToString());
             courseEvent.numberofFreePlace = Convert.ToDecimal(ds.Tables[0].Rows[0]["numberofFreePlace"].ToString());
             courseEvent.minimumParticipant = Convert.ToDecimal(ds.Tables[0].Rows[0]["minimumParticipant"].ToString());
-            courseEvent.averageParticipant = Convert.ToDecimal(ds.Tables[0].Rows[0]["id"].ToString());
+            courseEvent.averageParticipant = Convert.ToDecimal(ds.Tables[0].Rows[0]["averageParticipant"].ToString());
             courseEvent.minimumAchieve40PerMargin = Convert.ToDecimal(ds.Tables[0].Rows[0]["minimumAchieve40PerMargin"].ToString());
             courseEvent.maximumAvailable = Convert.ToDecimal(ds.Tables[0].Rows[0]["maximumAvailable"].ToString());
             courseEvent.contributionOverheadPercent = Convert.ToDecimal(ds.Tables[0].Rows[0]["contributionOverheadPercent"].ToString());

@@ -49,7 +49,7 @@
             font-size: 14px;
             padding: 0;
             border: 1px solid #ccc;
-            height: 500px;
+            height: 450px;
             width: 100%;
         }
 
@@ -65,7 +65,7 @@
             width: auto;
         }
 
-        th, td {
+        th, .rptTd {
             padding: 0;
             outline: 1px solid #ccc;
             background-color: white;
@@ -161,7 +161,7 @@
 
         .tableFixHead {
             overflow-y: auto;
-            height: 500px;
+            height: 450px;
         }
 
             .tableFixHead thead th {
@@ -225,6 +225,9 @@
 
         </div>
         <div class="row clearfix table-responsive" style="background-color: aquamarine;">
+            <div class="col-sm-12" style="text-align:right;">
+                <asp:Button Text="Export" OnClick="ExportExcel" CssClass="btn btn-primary" runat="server" />
+            </div>
             <div class="col-sm-12 tableFixHead">
                 <asp:PlaceHolder ID="PlaceHolder1" runat="server"></asp:PlaceHolder>
             </div>
