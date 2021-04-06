@@ -34,7 +34,7 @@
         }
         return false;
     });
-    $("#btnModify").click(function () {
+    $("#btnSubmit").click(function () {
         debugger;
         var courseInfoes = JSON.stringify(getCourseInfo());
         console.log(courseInfoes);

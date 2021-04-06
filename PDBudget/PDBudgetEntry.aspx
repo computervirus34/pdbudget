@@ -1004,8 +1004,10 @@
                                 Modify</button>&nbsp;&nbsp;
                             <button type="button" id="btnSubmit" class="btn btn-success">
                                 Submit</button>&nbsp;&nbsp;
-                            <button type="button" id="btnPreview" class="btn btn-primary"">
-                                Preview</button>
+                            <button type="button" id="btnPreview" class="btn btn-primary">
+                                Preview</button>&nbsp;&nbsp;
+                            <asp:Button ID="btnClear" runat="server" CssClass="btn btn-success" OnClick="btnClear_Click" Text="Clear"/>
+                            
                         </div>
                     </div>
                     <div class="row clearfix" style="display: none;" id="divForecast">
@@ -2419,15 +2421,15 @@
                                         <td colspan="2"></td>
                                         <td>
                                             <input onkeypress="return event.charCode === 0 || /\d/.test(String.fromCharCode(event.charCode));"
-                                                class="OtherExpenseInput hours_ expPresenterCalClass" id="bHourPresenter" name="bHourPresenter" />
+                                                class="OtherExpenseInput hours_ expPresenterBreakCalClass" id="bHourPresenter" name="bHourPresenter" />
                                         </td>
                                         <td>
                                             <input pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" placeholder="rate"
-                                                class="OtherExpenseInput hours_ expPresenterCalClass" id="bRatePresenter" name="bRatePresenter" />
+                                                class="OtherExpenseInput rate expPresenterBreakCalClass" id="bRatePresenter" name="bRatePresenter" />
                                         </td>
                                         <td>
                                             <input onkeypress="return event.charCode === 0 || /\d/.test(String.fromCharCode(event.charCode));"
-                                                id="bFeeSubTotalPresenter" name="bFeeSubTotalPresenter" class="OtherExpenseInput bFeeSubTotalPresenter"
+                                                id="bFeeSubTotalPresenter" name="bFeeSubTotalPresenter" class="OtherExpenseInput feeSubTotalPresenter"
                                                 readonly="readonly" />
                                         </td>
                                         <td colspan="8"></td>
@@ -2675,15 +2677,15 @@
                                          <td colspan="2"></td>
                                         <td>
                                             <input onkeypress="return event.charCode === 0 || /\d/.test(String.fromCharCode(event.charCode));"
-                                                class="OtherExpenseInput hours_ expTutorCalClass" id="bHourTutor" name="bHourTutor" />
+                                                class="OtherExpenseInput hours_ expTutorBreakCalClass" id="bHourTutor" name="bHourTutor" />
                                         </td>
                                         <td>
                                             <input pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" placeholder="rate"
-                                                class="OtherExpenseInput hours_ expPresenterCalClass" id="bRateTutor" name="bRateTutor" />
+                                                class="OtherExpenseInput hours_ expPresenterBreakCalClass" id="bRateTutor" name="bRateTutor" />
                                         </td>
                                         <td>
                                             <input onkeypress="return event.charCode === 0 || /\d/.test(String.fromCharCode(event.charCode));"
-                                                id="bFeeSubTotalTutor" name="bFeeSubTotalTutor" class="OtherExpenseInput bFeeSubTotalTutor"
+                                                id="bFeeSubTotalTutor" name="bFeeSubTotalTutor" class="OtherExpenseInput feeSubTotalTutor"
                                                 readonly="readonly" />
                                         </td>
                                         <td colspan="8"></td>
@@ -2976,15 +2978,15 @@
                                         <td colspan="2"></td>
                                         <td>
                                         	<input onkeypress="return event.charCode === 0 || /\d/.test(String.fromCharCode(event.charCode));"
-                                        		class="OtherExpenseInput hours_ expConvenorCalClass" id="bHourConvenor" name="bHourConvenor" />
+                                        		class="OtherExpenseInput hours_ expConvenorBreakCalClass" id="bHourConvenor" name="bHourConvenor" />
                                         </td>
                                         <td>
                                         	<input pattern="^\$\d{1,3}(,\d{3})*(\.\d)?$" data-type="currency" placeholder="rate"
-                                        		class="OtherExpenseInput hours_ expPresenterCalClass" id="bRateConvenor" name="bRateConvenor" />
+                                        		class="OtherExpenseInput hours_ expPresenterBreakCalClass" id="bRateConvenor" name="bRateConvenor" />
                                         </td>
                                         <td>
                                         	<input onkeypress="return event.charCode === 0 || /\d/.test(String.fromCharCode(event.charCode));"
-                                        		id="bFeeSubTotalConvenor" name="bFeeSubTotalConvenor" class="OtherExpenseInput bFeeSubTotalConvenor"
+                                        		id="bFeeSubTotalConvenor" name="bFeeSubTotalConvenor" class="OtherExpenseInput feeSubTotalConvenor"
                                         		readonly="readonly" />
                                         </td>
                                         <td colspan="8"></td>
@@ -3178,11 +3180,7 @@
                                             <br />
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <td colspan="18">
-                                            <br />
-                                        </td>
-                                    </tr>
+                                    
                                     <tr class="cateringCss">
                                         <td colspan="4">Catering(fixed price)
                                         </td>
@@ -3458,7 +3456,9 @@
                                 </tbody>
                                 <tbody>
                                     <tr>
-                                        <td colspan="18"></td>
+                                        <td colspan="18">
+                                            <br />
+                                        </td>
                                     </tr>
                                 </tbody>
                                 <tbody>
@@ -3600,7 +3600,7 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td colspan="18" style="height: 3px;"></td>
+                                        <td colspan="18" style="height: 3px;"><br /></td>
                                     </tr>
                                     <tr>
                                         <td colspan="11px" style="background: #7F7F7F; color: #FFFFFF;">Course Manuals - cost per participants (generally fixed price)
@@ -3913,6 +3913,13 @@
                         <div class="col-sm-12">
                             <table>
                                 <tbody>
+                                    <tr>
+                                        <td colspan="14" style="height: 5px;">
+                                            <a href="#projectedPLMarginMin" class="btn btn-info" data-toggle="collapse">+ Projected Profit Loss at Minimum Numbers</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tbody id="projectedPLMarginMin"  class="collapse">
                                     <tr class="proincminnum">
                                         <td colspan="13">Total Cost at Minimum Numbers
                                         </td>
@@ -3965,6 +3972,8 @@
                                                 readonly="readonly" />
                                         </td>
                                     </tr>
+                                    </tbody>
+                                <tbody>
                                     <tr>
                                         <td colspan="14" style="height: 5px;"></td>
                                     </tr>
@@ -4033,7 +4042,7 @@
                                 <tbody>
                                     <tr>
                                         <td colspan="14" style="height: 5px;">
-                                            <a href="#projectedPLMargin" class="btn btn-info" data-toggle="collapse">+ Projected Profit Loss and Margin at Average Numbers and 40% Margin</a>
+                                            <a href="#projectedPLMargin" class="btn btn-info" data-toggle="collapse">+ Projected Profit Loss and Margin at Average Numbers</a>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -4071,6 +4080,8 @@
                                                 readonly="readonly" />
                                         </td>
                                     </tr>
+                                    </tbody>
+                                <tbody>
                                     <tr>
                                         <td colspan="14" style="height: 5px;"></td>
                                     </tr>
@@ -4115,6 +4126,15 @@
                                     <tr>
                                         <td colspan="14" style="height: 5px;"></td>
                                     </tr>
+                                    </tbody>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="14" style="height: 5px;">
+                                            <a href="#projectedPLMargin40Per" class="btn btn-info" data-toggle="collapse">+ Projected Profit Loss at 40% Margin</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tbody id="projectedPLMargin40Per"  class="collapse">
                                     <tr class="proincacv40margin">
                                         <td colspan="13">TOTAL COST AT 40+% Margin
                                         </td>
@@ -4147,6 +4167,8 @@
                                                 disabled />
                                         </td>
                                     </tr>
+                                    </tbody>
+                                <tbody>
                                     <tr>
                                         <td colspan="14" style="height: 5px;"></td>
                                     </tr>
@@ -4450,10 +4472,13 @@
             $("#txtCourseCode").hide();
             $("#ddlCourseCode").show();
             $("#btnSave").attr("disabled", true);
+            $("#btnModify").attr("disabled", false);
+            $("#btnSubmit").attr("disabled", false);
         });
 
         CalculateTotal();
-
+        $("#btnModify").attr("disabled", true);
+        $("#btnSubmit").attr("disabled", true);
         
         $("#txtCreatedBy").val(user);
         $("#txtModifiedBy").val(user + "-" + new Date().toLocaleString());
@@ -4650,15 +4675,15 @@
                 + '<td colspan="2"></td>'
                 + '<td>'
                 + '	<input onkeypress="return event.charCode === 0 || /\d/.test(String.fromCharCode(event.charCode));"'
-                + '		class="OtherExpenseInput hours_ expPresenterCalClass" id="bHourPresenter" name="bHourPresenter" />'
+                + '		class="OtherExpenseInput hours_ expPresenterBreakCalClass" id="bHourPresenter" name="bHourPresenter" />'
                 + '</td>'
                 + '<td>'
                 + '	<input pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" placeholder="rate"'
-                + '		class="OtherExpenseInput hours_ expPresenterCalClass" id="bRatePresenter" name="bRatePresenter" />'
+                + '		class="OtherExpenseInput hours_ expPresenterBreakCalClass" id="bRatePresenter" name="bRatePresenter" />'
                 + '</td>'
                 + '<td>'
                 + '	<input onkeypress="return event.charCode === 0 || /\d/.test(String.fromCharCode(event.charCode));"'
-                + '		id="bFeeSubTotalPresenter" name="bFeeSubTotalPresenter" class="OtherExpenseInput bFeeSubTotalPresenter"'
+                + '		id="bFeeSubTotalPresenter" name="bFeeSubTotalPresenter" class="OtherExpenseInput feeSubTotalPresenter"'
                 + '		readonly="readonly" />'
                 + '</td>'
                 + '<td colspan="8"></td>'
@@ -4783,15 +4808,15 @@
                 +'<td colspan="2"></td>'
                 + '<td>'
                 + '	<input onkeypress="return event.charCode === 0 || /\d/.test(String.fromCharCode(event.charCode));"'
-                + '		class="OtherExpenseInput hours_ expTutorCalClass" id="bHourTutor" name="bHourTutor" />'
+                + '		class="OtherExpenseInput hours_ expTutorBreakCalClass" id="bHourTutor" name="bHourTutor" />'
                 + '</td>'
                 + '<td>'
                 + '	<input pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" placeholder="rate"'
-                + '		class="OtherExpenseInput hours_ expTutorCalClass" id="bRateTutor" name="bRateTutor" />'
+                + '		class="OtherExpenseInput hours_ expTutorBreakCalClass" id="bRateTutor" name="bRateTutor" />'
                 + '</td>'
                 + '<td>'
                 + '	<input onkeypress="return event.charCode === 0 || /\d/.test(String.fromCharCode(event.charCode));"'
-                + '		id="bFeeSubTotalTutor" name="bFeeSubTotalTutor" class="OtherExpenseInput bFeeSubTotalTutor"'
+                + '		id="bFeeSubTotalTutor" name="bFeeSubTotalTutor" class="OtherExpenseInput feeSubTotalTutor"'
                 + '		readonly="readonly" />'
                 + '</td>'
                 + '<td colspan="8"></td>'+
@@ -4918,15 +4943,15 @@
                 + '<td colspan="2"></td>'
                 + '<td>'
                 + '	<input onkeypress="return event.charCode === 0 || /\d/.test(String.fromCharCode(event.charCode));"'
-                + '		class="OtherExpenseInput hours_ expConvenorCalClass" id="bHourConvenor" name="bHourConvenor" />'
+                + '		class="OtherExpenseInput hours_ expConvenorBreakCalClass" id="bHourConvenor" name="bHourConvenor" />'
                 + '</td>'
                 + '<td>'
                 + '	<input pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" placeholder="rate"'
-                + '		class="OtherExpenseInput hours_ expConvenorCalClass" id="bRateConvenor" name="bRateConvenor" />'
+                + '		class="OtherExpenseInput hours_ expConvenorBreakCalClass" id="bRateConvenor" name="bRateConvenor" />'
                 + '</td>'
                 + '<td>'
                 + '	<input onkeypress="return event.charCode === 0 || /\d/.test(String.fromCharCode(event.charCode));"'
-                + '		id="bFeeSubTotalConvenor" name="bFeeSubTotalConvenor" class="OtherExpenseInput bFeeSubTotalConvenor"'
+                + '		id="bFeeSubTotalConvenor" name="bFeeSubTotalConvenor" class="OtherExpenseInput feeSubTotalConvenor"'
                 + '		readonly="readonly" />'
                 + '</td>'
                 + '<td colspan="8"></td>'+
@@ -5016,6 +5041,7 @@
         var invAmountPresenter = 0;
 
         var feeSubTotalPresenter = 0;
+        var bfeeSubTotalPresenter = 0;
         var expSubTotalPresenter = 0;
         var totalPresenter = 0;
 
@@ -5027,18 +5053,24 @@
         taxiPetrolPresenter = $(this).parent().parent().parent().find('#taxiPetrolPresenter').val().replace(/[$,]+/g, "") || 0;
         invAmountPresenter = $(this).parent().parent().parent().find('#invAmountPresenter').val().replace(/[$,]+/g, "") || 0;
 
+        var bHour = $(this).closest("tr").next().next().find("#bHourPresenter").val().replace(/[$,]+/g, "") || 0;
+        var bRate = $(this).closest("tr").next().next().find("#bRatePresenter").val().replace(/[$,]+/g, "") || 0;
+
         feeSubTotalPresenter = Number(hourPresenter) * Number(ratePresenter);
+        bfeeSubTotalPresenter = Number(bHour) * Number(bRate);
         expSubTotalPresenter = Number(accomPresenter) + Number(travelExpPresenter) + Number(mealPresenter) + Number(taxiPetrolPresenter);
         totalPresenter = Number(feeSubTotalPresenter) + Number(expSubTotalPresenter);
 
         $(this).parent().parent().parent().find('#feeSubTotalPresenter').val(setCurrency(feeSubTotalPresenter));
+        
         $(this).parent().parent().parent().find('#expSubTotalPresenter').val(setCurrency(expSubTotalPresenter));
         $(this).parent().parent().parent().find('#totalPresenter').val(setCurrency(totalPresenter));
         $(this).parent().parent().parent().find('#invSubTotalAmountPresenter').val(setCurrency(invAmountPresenter));
 
+        $(this).closest("tr").next().next().find('#bFeeSubTotalPresenter').val(setCurrency(bfeeSubTotalPresenter));
         //End of Presenter Calculation
         $(this).closest("tr").find('#invNoPresenter').val("Pending");
-        $(this).closest("tr").find("#invAmountPresenter").val(setCurrency(feeSubTotalPresenter || 0));
+        $(this).closest("tr").find("#invAmountPresenter").val(setCurrency(feeSubTotalPresenter + bfeeSubTotalPresenter || 0));
         $(this).closest("tr").next().find("#ddlPresenterExpCode").val("40492P").change();
 
 
@@ -5059,6 +5091,22 @@
         $(this).closest("tr").next().next().next().next().find("#expCodePresenterTaxi").val("40494");
 
 
+
+        fnCalculatePresenterSubTotal();
+    });
+
+    $(document).on('keyup', '.expPresenterBreakCalClass', function () {
+        debugger;
+        //Presenter Calculation
+        var bfeeSubTotalPresenter = 0;
+
+        var bHour = $(this).parent().parent().parent().find("#bHourPresenter").val().replace(/[$,]+/g, "") || 0;
+        var bRate = $(this).parent().parent().parent().find("#bRatePresenter").val().replace(/[$,]+/g, "") || 0;
+
+        bfeeSubTotalPresenter = Number(bHour) * Number(bRate);
+        $(this).parent().parent().parent().find('#bFeeSubTotalPresenter').val(setCurrency(bfeeSubTotalPresenter));
+        var feeSubTotalPresenter = $(this).closest("tr").prev().prev().find("#feeSubTotalPresenter").val().replace(/[$,]+/g, "") || 0;
+        $(this).closest("tr").prev().prev().find("#invAmountPresenter").val(setCurrency(feeSubTotalPresenter + bfeeSubTotalPresenter || 0));
 
         fnCalculatePresenterSubTotal();
     });
@@ -5154,6 +5202,23 @@
         fnCalculateTutorSubTotal();
     });
 
+    $(document).on('keyup', '.expTutorBreakCalClass', function () {
+        debugger;
+        //Presenter Calculation
+        var bfeeSubTotalTutor = 0;
+
+        var bHour = $(this).parent().parent().parent().find("#bHourTutor").val().replace(/[$,]+/g, "") || 0;
+        var bRate = $(this).parent().parent().parent().find("#bRateTutor").val().replace(/[$,]+/g, "") || 0;
+
+        bfeeSubTotalTutor = Number(bHour) * Number(bRate);
+        $(this).parent().parent().parent().find('#bFeeSubTotalTutor').val(setCurrency(bfeeSubTotalTutor));
+        var feeSubTotalTutor = $(this).closest("tr").prev().prev().find("#feeSubTotalTutor").val().replace(/[$,]+/g, "") || 0;
+        $(this).closest("tr").prev().prev().find("#invAmountTutor").val(setCurrency(feeSubTotalTutor + bfeeSubTotalTutor || 0));
+
+        fnCalculateTutorSubTotal();
+    });
+
+
     function fnCalculateTutorSubTotal() {
         debugger;
         var feeSubTotalTutor = 0;
@@ -5244,6 +5309,23 @@
 
         fnCalculateConvenorSubTotal();
     });
+
+    $(document).on('keyup', '.expConvenorBreakCalClass', function () {
+        debugger;
+        //Presenter Calculation
+        var bfeeSubTotalConvenor = 0;
+
+        var bHour = $(this).parent().parent().parent().find("#bHourConvenor").val().replace(/[$,]+/g, "") || 0;
+        var bRate = $(this).parent().parent().parent().find("#bRateConvenor").val().replace(/[$,]+/g, "") || 0;
+
+        bfeeSubTotalConvenor = Number(bHour) * Number(bRate);
+        $(this).parent().parent().parent().find('#bFeeSubTotalConvenor').val(setCurrency(bfeeSubTotalConvenor));
+        var feeSubTotalConvenor = $(this).closest("tr").prev().prev().find("#feeSubTotalConvenor").val().replace(/[$,]+/g, "") || 0;
+        $(this).closest("tr").prev().prev().find("#invAmountConvenor").val(setCurrency(feeSubTotalConvenor + bfeeSubTotalConvenor || 0));
+
+        fnCalculateConvenorSubTotal();
+    });
+
 
     function fnCalculateConvenorSubTotal() {
         debugger;
@@ -5775,15 +5857,15 @@
                         + '<td colspan="2"></td>'
                         + '<td>'
                         + '	<input onkeypress="return event.charCode === 0 || /\d/.test(String.fromCharCode(event.charCode));"'
-                        + '		class="OtherExpenseInput hours_ expPresenterCalClass" id="bHourPresenter" name="bHourPresenter" />'
+                        + '		class="OtherExpenseInput hours_ expPresenterBreakCalClass" id="bHourPresenter" name="bHourPresenter" />'
                         + '</td>'
                         + '<td>'
                         + '	<input pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" placeholder="rate"'
-                        + '		class="OtherExpenseInput hours_ expPresenterCalClass" id="bRatePresenter" name="bRatePresenter" />'
+                        + '		class="OtherExpenseInput hours_ expPresenterBreakCalClass" id="bRatePresenter" name="bRatePresenter" />'
                         + '</td>'
                         + '<td>'
                         + '	<input onkeypress="return event.charCode === 0 || /\d/.test(String.fromCharCode(event.charCode));"'
-                        + '		id="bFeeSubTotalPresenter" name="bFeeSubTotalPresenter" class="OtherExpenseInput bFeeSubTotalPresenter"'
+                        + '		id="bFeeSubTotalPresenter" name="bFeeSubTotalPresenter" class="OtherExpenseInput feeSubTotalPresenter"'
                         + '		readonly="readonly" />'
                         + '</td>'
                         + '<td colspan="8"></td>'
@@ -5944,15 +6026,15 @@
                         +'<td colspan="2"></td>'
                         + '<td>'
                         + '	<input onkeypress="return event.charCode === 0 || /\d/.test(String.fromCharCode(event.charCode));"'
-                        + '		class="OtherExpenseInput hours_ expTutorCalClass" id="bHourTutor" name="bHourTutor" />'
+                        + '		class="OtherExpenseInput hours_ expTutorBreakCalClass" id="bHourTutor" name="bHourTutor" />'
                         + '</td>'
                         + '<td>'
                         + '	<input pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" placeholder="rate"'
-                        + '		class="OtherExpenseInput hours_ expTutorCalClass" id="bRateTutor" name="bRateTutor" />'
+                        + '		class="OtherExpenseInput hours_ expTutorBreakCalClass" id="bRateTutor" name="bRateTutor" />'
                         + '</td>'
                         + '<td>'
                         + '	<input onkeypress="return event.charCode === 0 || /\d/.test(String.fromCharCode(event.charCode));"'
-                        + '		id="bFeeSubTotalTutor" name="bFeeSubTotalTutor" class="OtherExpenseInput bFeeSubTotalTutor"'
+                        + '		id="bFeeSubTotalTutor" name="bFeeSubTotalTutor" class="OtherExpenseInput feeSubTotalTutor"'
                         + '		readonly="readonly" />'
                         + '</td>'
                         + '<td colspan="8"></td>'+
@@ -6133,15 +6215,15 @@
                         +'<td colspan="2"></td>'
                         + '<td>'
                         + '	<input onkeypress="return event.charCode === 0 || /\d/.test(String.fromCharCode(event.charCode));"'
-                        + '		class="OtherExpenseInput hours_ expConvenorCalClass" id="bHourConvenor" name="bHourConvenor" />'
+                        + '		class="OtherExpenseInput hours_ expConvenorBreakCalClass" id="bHourConvenor" name="bHourConvenor" />'
                         + '</td>'
                         + '<td>'
                         + '	<input pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" placeholder="rate"'
-                        + '		class="OtherExpenseInput hours_ expConvenorCalClass" id="bRateConvenor" name="bRateConvenor" />'
+                        + '		class="OtherExpenseInput hours_ expConvenorBreakCalClass" id="bRateConvenor" name="bRateConvenor" />'
                         + '</td>'
                         + '<td>'
                         + '	<input onkeypress="return event.charCode === 0 || /\d/.test(String.fromCharCode(event.charCode));"'
-                        + '		id="bFeeSubTotalConvenor" name="bFeeSubTotalConvenor" class="OtherExpenseInput bFeeSubTotalConvenor"'
+                        + '		id="bFeeSubTotalConvenor" name="bFeeSubTotalConvenor" class="OtherExpenseInput feeSubTotalConvenor"'
                         + '		readonly="readonly" />'
                         + '</td>'
                         + '<td colspan="8"></td>'+

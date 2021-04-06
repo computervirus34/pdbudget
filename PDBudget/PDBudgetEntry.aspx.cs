@@ -14,6 +14,7 @@ using System.Text;
 using System.Web.Security;
 using System.Web.Script.Services;
 using MySql.Data.MySqlClient;
+using System.Diagnostics;
 
 namespace PDBudget
 {
@@ -23,6 +24,8 @@ namespace PDBudget
         DataReader dr = new DataReader();
         PopulateLists pl = new PopulateLists();
         FillList fl = new FillList();
+
+        
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!HttpContext.Current.User.Identity.IsAuthenticated || Session["user"]==null)
@@ -1682,6 +1685,11 @@ namespace PDBudget
             courseEvent.isSignedOff = ds.Tables[0].Rows[0]["isSignedOff"].ToString();
 
             return courseEvent;
+        }
+
+        protected void btnClear_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("~/BudgetEntry");
         }
     }
 }
