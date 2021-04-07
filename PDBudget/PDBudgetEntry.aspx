@@ -2292,9 +2292,9 @@
                                         </th>
                                         <th style="text-align: center; width: 70px;">Session
                                         </th>
-                                        <th style="text-align: center; width: 70px;">Hours
+                                        <th style="text-align: center; width: 70px;">Presenting Hours
                                         </th>
-                                        <th style="text-align: center; width: 70px;">Rate
+                                        <th style="text-align: center; width: 70px;">Presenting Rate
                                         </th>
                                         <th style="text-align: center; width: 90px;">Fee Subtotal
                                         </th>
@@ -2396,8 +2396,8 @@
                                     </tr>
                                     <tr class="presenterList">
                                         <td colspan="2" class="auto-style1"></td>
-                                        <td class="auto-style1" style="background-color:#7092BE; color:white;">B.Hours</td>
-                                        <td class="auto-style1" style="background-color:#7092BE; color:white;">B.Rate</td>
+                                        <td class="auto-style1" style="background-color:#7092BE; color:white;font-size:10px;">Break Hours</td>
+                                        <td class="auto-style1" style="background-color:#7092BE; color:white;font-size:10px;">Break Rate</td>
                                         <td class="auto-style1"></td>
                                         <td colspan="8" class="auto-style1"></td>
                                         <td class="auto-style1">
@@ -2550,9 +2550,9 @@
                                         </th>
                                         <th style="text-align: center; width: 70px;">Session
                                         </th>
-                                        <th style="text-align: center; width: 70px;">Hour
+                                        <th style="text-align: center; width: 70px;">Presenting Hour
                                         </th>
-                                        <th style="text-align: center; width: 70px;">Rate
+                                        <th style="text-align: center; width: 70px;">Presenting Rate
                                         </th>
                                         <th style="text-align: center; width: 90px;">Fee Subtotal
                                         </th>
@@ -2653,8 +2653,8 @@
                                     </tr>
                                     <tr class="tutorList">
                                         <td colspan="2" class="auto-style1"></td>
-                                        <td class="auto-style1" style="background-color:#7092BE; color:white;">B.Hours</td>
-                                        <td class="auto-style1" style="background-color:#7092BE; color:white;">B.Rate</td>
+                                        <td class="auto-style1" style="background-color:#7092BE; color:white;font-size:10px;">Break Hours</td>
+                                        <td class="auto-style1" style="background-color:#7092BE; color:white;font-size:10px;">Break Rate</td>
                                         <td class="auto-style1"></td>
                                         <td colspan="8" class="auto-style1"></td>
                                         <td>
@@ -2846,7 +2846,7 @@
                                         </th>
                                         <th style="text-align: center; width: 70px;">Session
                                         </th>
-                                        <th style="text-align: center; width: 70px;">Days
+                                        <th style="text-align: center; width: 70px;">&nbsp;&nbsp;&nbsp;Days&nbsp;&nbsp;&nbsp;
                                         </th>
                                         <th style="text-align: center; width: 70px;">Rate
                                         </th>
@@ -2954,8 +2954,8 @@
                                     </tr>
                                     <tr class="convenorList">
                                         <td colspan="2" class="auto-style1"></td>
-                                        <td class="auto-style1" style="background-color:#7092BE; color:white;">B.Hours</td>
-                                        <td class="auto-style1" style="background-color:#7092BE; color:white;">B.Rate</td>
+                                        <td class="auto-style1" style="background-color:#7092BE; color:white;font-size:10px;">Break Hours</td>
+                                        <td class="auto-style1" style="background-color:#7092BE; color:white;font-size:10px;">Break Rate</td>
                                         <td class="auto-style1"></td>
                                         <td colspan="8" class="auto-style1"></td>
                                         <td>
@@ -4042,7 +4042,7 @@
                                 <tbody>
                                     <tr>
                                         <td colspan="14" style="height: 5px;">
-                                            <a href="#projectedPLMargin" class="btn btn-info" data-toggle="collapse">+ Projected Profit Loss and Margin at Average Numbers</a>
+                                            <a href="#projectedPLMargin" class="btn btn-info" data-toggle="collapse">+ Projected Profit Loss at Average Numbers</a>
                                         </td>
                                     </tr>
                                 </tbody>
